@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>For You ❤️</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+        }
+        h1 {
+            color: #ff69b4;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        function revealMessage() {
+            document.getElementById('hiddenMessage').style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+    <h1>A Secret Just for You ❤️</h1>
+    <p>I’ve been thinking a lot, and I want to share something special…</p>
+    <button onclick="revealMessage()">Click Here</button>
+    <div id="hiddenMessage" class="hidden">
+        <p>I'm really sorry I made you feel uncared for.</p>
+        <p>You mean the world to me, and I will always listen better moving forward.</p>
+        <p>Sending you the biggest virtual hug 🤗!</p>
+        <img src="your_cartoon_link_here" alt="Cartoon Hug" style="max-width: 200px;">
+    </div>
+</body>
+</html>
