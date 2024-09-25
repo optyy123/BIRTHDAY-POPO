@@ -33,16 +33,15 @@
     </script>
 </head>
 <body>
-    <h1>A Secret Just for You ❤️</h1>
-    <p>I’ve been thinking a lot, and I want to share something special…</p>
+    <h1>Im sorry popo ❤️</h1>
+    <p>I have been thinking a lot about how to make it up for popo </p>
     <button onclick="revealMessage()">Click Here for a Surprise</button>
     <div id="hiddenMessage" class="hidden">
-        <p>I'm really sorry I made you feel uncared for.</p>
-        <p>You mean the world to me, and I will always try to listen better.</p>
-        <p>Now, I have something fun for you!</p>
-        <p><strong>Click the button below to solve a puzzle that holds my special apology!</strong></p>
+        <p>Im really sorry I made you feel uncared for.</p>
+        <p>You mean the world to me and I will always try to listen better.</p>
+        <p>So i made something fol you 👉👈</p>
         <a href="https://www.jigsawplanet.com/?rc=play&pid=0923e2fb70c5" target="_blank">
-            <button>Solve the Puzzle!</button>
+            <button>enjoy!</button>
         </a>
     </div>
 </body>
