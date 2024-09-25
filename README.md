@@ -40,8 +40,10 @@
         <p>Im really sorry I made you feel uncared for.</p>
         <p>You mean the world to me and I will always try to listen better.</p>
         <p>So i made something fol you 👉👈</p>
+        <p>Click the picture 👇</p>
         <a href="https://www.jigsawplanet.com/?rc=play&pid=0923e2fb70c5" target="_blank">
-            <button>enjoy!</button>
+            <button><img src="https://media.tenor.com/VjE3bo1ITUMAAAAe/cute-heart.png" alt="Cartoon Hug" style="max-width: 300px;">
+</button>
         </a>
     </div>
 </body>
