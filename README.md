@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html>
 <head>
     <title>Countdown to Your Special Day! 🎉</title>
@@ -24,9 +24,14 @@
             color: #ff4500;
         }
         #counter {
-            font-size: 2em;
-            color: #32CD32;
+            font-size: 2.5em;
+            color: white;
+            background-color: #ff69b4;
+            padding: 10px 20px;
+            border-radius: 50px;
             margin-top: 20px;
+            display: inline-block;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
         }
         .hidden {
             display: none;
@@ -34,8 +39,8 @@
         .emoji {
             position: absolute;
             font-size: 2em;
-            width: 60px;
-            height: 60px;
+            width: 80px; /* Larger hitbox */
+            height: 80px;
             user-select: none;
             transition: transform 8s ease, opacity 0.5s ease;
         }
@@ -48,8 +53,11 @@
             }
             .emoji {
                 font-size: 1.5em;
-                width: 50px;
-                height: 50px;
+                width: 60px;
+                height: 60px;
+            }
+            #counter {
+                font-size: 2em;
             }
         }
     </style>
@@ -79,14 +87,13 @@
         const emojis = ['🎈', '🎉', '❤️', '💖', '💘'];
         let counter = 0;
 
-        // Function to apply slower, paper-like floating behavior
+        // Function to apply slow floating behavior
         function applySlowFloating(emoji) {
             let velocityY = Math.random() * -4 - 4; // Slow upward velocity
             let velocityX = (Math.random() - 0.5) * 3; // Slight horizontal movement
             const gravity = 0.03; // Low gravity for slow floating
 
             function updatePosition() {
-                // Apply gravity and slight drag for smooth floating
                 velocityY += gravity;
                 velocityX *= 0.995;
 
@@ -96,18 +103,16 @@
                 emoji.style.top = (currentTop + velocityY) + 'px';
                 emoji.style.left = (currentLeft + velocityX) + 'px';
 
-                // Keep applying the floating effect
                 requestAnimationFrame(updatePosition);
             }
             updatePosition();
         }
 
-        // Function to throw emojis with slow floating behavior
+        // Function to throw emojis
         function throwEmojis() {
             const emojiContainer = document.createElement('div');
             document.body.appendChild(emojiContainer);
 
-            // Generate a random number of emojis between 3 and 10
             const emojiCount = Math.floor(Math.random() * 8) + 3;
 
             for (let i = 0; i < emojiCount; i++) {
@@ -118,23 +123,22 @@
 
                     // Set random initial position at the bottom
                     emoji.style.left = Math.random() * window.innerWidth + 'px';
-                    emoji.style.top = window.innerHeight - 50 + 'px'; // Start near the bottom
+                    emoji.style.top = window.innerHeight - 50 + 'px';
 
-                    // Touch or click event to count and make it disappear
+                    // Click or touch event to increment counter and add sparkle
                     emoji.addEventListener('click', () => {
                         emoji.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
-                        emoji.style.transform = 'scale(1.5) translateY(-150px)'; // Quick flight upward
+                        emoji.style.transform = 'scale(1.5) translateY(-150px)';
                         emoji.style.opacity = '0';
 
-                        // Show sparkle emoji when it disappears
                         setTimeout(() => {
                             emoji.innerText = '✨';
                             setTimeout(() => {
                                 emoji.remove();
-                            }, 500); // Remove emoji after sparkle effect
+                            }, 500);
                         }, 500);
 
-                        // Increment the counter
+                        // Increment counter
                         counter++;
                         document.getElementById('counter').innerText = `Touched Emojis: ${counter}`;
                     });
@@ -142,15 +146,14 @@
                     // Append emoji to container
                     emojiContainer.appendChild(emoji);
 
-                    // Apply the slow floating effect
                     applySlowFloating(emoji);
-                }, Math.random() * 1500); // Delay the emoji launches for randomness
+                }, Math.random() * 1500);
             }
         }
 
-        // Start throwing emojis immediately
+        // Start throwing emojis
         throwEmojis();
-        setInterval(throwEmojis, 5000); // Re-throw emojis every 5 seconds
+        setInterval(throwEmojis, 5000);
     </script>
 </head>
 <body>
