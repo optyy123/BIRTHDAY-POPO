@@ -10,6 +10,8 @@
             background-image: url('https://your-link-to-background-image.com');
             background-size: cover;
             overflow: hidden;
+            position: relative;
+            height: 100vh; /* Full view height */
         }
         h1 {
             color: #ff69b4;
@@ -38,15 +40,7 @@
             font-size: 2em;
             user-select: none;
             cursor: pointer;
-            animation: floatUp 5s linear forwards;
-        }
-        @keyframes floatUp {
-            0% {
-                transform: translateY(0);
-            }
-            100% {
-                transform: translateY(-100vh); /* Float upwards off the screen */
-            }
+            transition: transform 1s ease, opacity 0.5s ease;
         }
     </style>
     <script>
@@ -74,6 +68,40 @@
         // Emojis array with balloons, confetti, and heart emojis
         const emojis = ['🎈', '🎉', '❤️', '💖', '💘'];
 
+        // Function to apply gravity and randomness for falling
+        function applyPhysics(emoji) {
+            let velocityY = Math.random() * -20 - 20; // Initial upward velocity
+            let velocityX = (Math.random() - 0.5) * 20; // Horizontal velocity
+            const gravity = 1.5; // Gravity factor
+            const drag = 0.99; // Drag for friction effect
+
+            function updatePosition() {
+                // Apply gravity and friction to the movement
+                velocityY += gravity;
+                velocityX *= drag;
+
+                // Update the emoji's position
+                const currentTop = parseFloat(emoji.style.top) || 0;
+                const currentLeft = parseFloat(emoji.style.left) || 0;
+                emoji.style.top = (currentTop + velocityY) + 'px';
+                emoji.style.left = (currentLeft + velocityX) + 'px';
+
+                // Check if the emoji hits the bottom of the screen
+                if (currentTop + velocityY > window.innerHeight - 50) {
+                    velocityY = -velocityY * 0.8; // Bounce up a bit
+                }
+
+                // Remove emoji after 1 minute
+                setTimeout(() => {
+                    emoji.remove();
+                }, 60000);
+
+                // Keep applying physics
+                requestAnimationFrame(updatePosition);
+            }
+            updatePosition();
+        }
+
         // Function to randomly throw emojis with physics-like behavior
         function throwEmojis() {
             const emojiContainer = document.createElement('div');
@@ -90,28 +118,61 @@
 
                     // Set random initial position at the bottom
                     emoji.style.left = Math.random() * window.innerWidth + 'px';
-                    emoji.style.bottom = '-50px'; // Start below the visible screen
+                    emoji.style.top = window.innerHeight - 50 + 'px'; // Start near the bottom
 
-                    // Apply physics-like animation using CSS
-                    emoji.style.transition = `transform ${Math.random() * 2 + 3}s ease-out, opacity 1s ease-out`;
+                    // Make the emoji draggable/throwable
+                    let isDragging = false;
+                    let startX, startY;
 
-                    // Apply random upward force (similar to gravity effect)
-                    const randomX = (Math.random() - 0.5) * 200; // Random horizontal movement
-                    const randomY = -(Math.random() * window.innerHeight + 200); // Random upward movement
-                    emoji.style.transform = `translate(${randomX}px, ${randomY}px)`;
+                    // Mouse or touch start
+                    emoji.addEventListener('mousedown', (e) => {
+                        isDragging = true;
+                        startX = e.clientX - parseInt(emoji.style.left);
+                        startY = e.clientY - parseInt(emoji.style.top);
+                    });
 
-                    // Add interactivity: remove on click/tap
-                    emoji.addEventListener('click', () => {
-                        emoji.remove();
+                    document.addEventListener('mousemove', (e) => {
+                        if (isDragging) {
+                            emoji.style.left = e.clientX - startX + 'px';
+                            emoji.style.top = e.clientY - startY + 'px';
+                        }
+                    });
+
+                    document.addEventListener('mouseup', () => {
+                        if (isDragging) {
+                            isDragging = false;
+                            applyPhysics(emoji); // Apply gravity after it's thrown
+                        }
+                    });
+
+                    // Touch events for mobile
+                    emoji.addEventListener('touchstart', (e) => {
+                        isDragging = true;
+                        const touch = e.touches[0];
+                        startX = touch.clientX - parseInt(emoji.style.left);
+                        startY = touch.clientY - parseInt(emoji.style.top);
+                    });
+
+                    document.addEventListener('touchmove', (e) => {
+                        if (isDragging) {
+                            const touch = e.touches[0];
+                            emoji.style.left = touch.clientX - startX + 'px';
+                            emoji.style.top = touch.clientY - startY + 'px';
+                        }
+                    });
+
+                    document.addEventListener('touchend', () => {
+                        if (isDragging) {
+                            isDragging = false;
+                            applyPhysics(emoji); // Apply gravity after it's thrown
+                        }
                     });
 
                     // Append emoji to container
                     emojiContainer.appendChild(emoji);
 
-                    // Remove emoji after a random amount of time (between 3 and 6 seconds)
-                    setTimeout(() => {
-                        emoji.remove();
-                    }, Math.random() * 3000 + 3000);
+                    // Apply initial gravity and physics
+                    applyPhysics(emoji);
                 }, Math.random() * 1000); // Delay the emoji launches for more randomness
             }
         }
