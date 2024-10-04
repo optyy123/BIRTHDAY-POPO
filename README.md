@@ -6,8 +6,8 @@
         body {
             font-family: 'Arial', sans-serif;
             text-align: center;
-            background-color: #FFFFFF;
-            background-image: url('');
+            background-color: #ffe4e1;
+            background-image: url('https://your-link-to-background-image.com');
             background-size: cover;
             overflow: hidden;
         }
@@ -17,7 +17,7 @@
         }
         #countdown {
             font-size: 2em;
-            color: #008B8B;
+            color: #ff4500;
         }
         .hidden {
             display: none;
@@ -36,7 +36,8 @@
         .emoji {
             position: absolute;
             font-size: 2em;
-            bottom: -50px; /* Start below the screen */
+            user-select: none;
+            cursor: pointer;
             animation: floatUp 5s linear forwards;
         }
         @keyframes floatUp {
@@ -44,7 +45,7 @@
                 transform: translateY(0);
             }
             100% {
-                transform: translateY(-100vh); /* Float upwards across the screen */
+                transform: translateY(-100vh); /* Float upwards off the screen */
             }
         }
     </style>
@@ -70,30 +71,48 @@
             }
         }, 1000);
 
-        // Function to throw random balloons and confetti from the bottom
+        // Emojis array with balloons, confetti, and heart emojis
+        const emojis = ['🎈', '🎉', '❤️', '💖', '💘'];
+
+        // Function to randomly throw emojis with physics-like behavior
         function throwEmojis() {
-            const emojis = ['🎈', '🎉']; // Balloons and confetti
             const emojiContainer = document.createElement('div');
             document.body.appendChild(emojiContainer);
 
-            // Generate a random number of emojis between 5 and 15
-            const emojiCount = Math.floor(Math.random() * 11) + 5;
+            // Generate a random number of emojis between 3 and 10
+            const emojiCount = Math.floor(Math.random() * 8) + 3;
 
             for (let i = 0; i < emojiCount; i++) {
-                const emoji = document.createElement('div');
-                emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                emoji.classList.add('emoji');
-
-                // Set random horizontal position for each emoji
-                emoji.style.left = Math.random() * window.innerWidth + 'px';
-
-                // Append emoji to the container
-                emojiContainer.appendChild(emoji);
-
-                // Remove the emoji after 5 seconds to avoid clutter
                 setTimeout(() => {
-                    emoji.remove();
-                }, 5000);
+                    const emoji = document.createElement('div');
+                    emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                    emoji.classList.add('emoji');
+
+                    // Set random initial position at the bottom
+                    emoji.style.left = Math.random() * window.innerWidth + 'px';
+                    emoji.style.bottom = '-50px'; // Start below the visible screen
+
+                    // Apply physics-like animation using CSS
+                    emoji.style.transition = `transform ${Math.random() * 2 + 3}s ease-out, opacity 1s ease-out`;
+
+                    // Apply random upward force (similar to gravity effect)
+                    const randomX = (Math.random() - 0.5) * 200; // Random horizontal movement
+                    const randomY = -(Math.random() * window.innerHeight + 200); // Random upward movement
+                    emoji.style.transform = `translate(${randomX}px, ${randomY}px)`;
+
+                    // Add interactivity: remove on click/tap
+                    emoji.addEventListener('click', () => {
+                        emoji.remove();
+                    });
+
+                    // Append emoji to container
+                    emojiContainer.appendChild(emoji);
+
+                    // Remove emoji after a random amount of time (between 3 and 6 seconds)
+                    setTimeout(() => {
+                        emoji.remove();
+                    }, Math.random() * 3000 + 3000);
+                }, Math.random() * 1000); // Delay the emoji launches for more randomness
             }
         }
 
