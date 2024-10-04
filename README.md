@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html>
 <head>
     <title>Countdown to Your Special Day! 🎉</title>
@@ -7,7 +7,7 @@
             font-family: 'Arial', sans-serif;
             text-align: center;
             background-color: #ffe4e1;
-            background-image: url('https://png.pngtree.com/background/20211215/original/pngtree-abstract-colorful-theme-minimalist-birthday-lineart-background-picture-image_1449397.jpg'); /* You can add a birthday-themed background here */
+            background-image: url('https://marketplace.canva.com/EAE9YvLQdzg/1/0/1600w/canva-blue-purple-colorful-birthday-zoom-virtual-background-tkbW_FNbhXg.jpg'); /* You can add a birthday-themed background here */
             background-size: cover;
         }
         h1 {
