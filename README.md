@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html>
 <head>
     <title>Countdown to Your Special Day! 🎉</title>
@@ -91,8 +91,8 @@
             }
         }, 1000);
 
-        // Emojis array with balloons, confetti, and heart emojis
-        const emojis = ['🎈', '🎉', '❤️', '💖', '💘'];
+        // Emojis array with balloons, confetti, hearts, and gifts
+        const emojis = ['🎈', '🎉', '❤️', '💖', '💘', '💙', '🎁'];
         let counter = 0;
         let missedEmojis = 0;
 
@@ -115,7 +115,6 @@
                 // Remove emoji if it reaches the bottom of the screen (untouched)
                 if (parseFloat(emoji.style.top) > window.innerHeight) {
                     emoji.remove();
-                    missedEmojis++;
                     if (counter > 0) { // Only decrement if counter is above 0
                         counter--;
                         document.getElementById('counter').innerText = `Touched Emojis: ${counter}`;
@@ -163,9 +162,14 @@
                         counter++;
                         document.getElementById('counter').innerText = `Touched Emojis: ${counter}`;
 
-                        // Show notification after 5 touches
+                        // Show notification after 5 touches and hide after 5 seconds
                         if (counter === 5) {
-                            document.getElementById('notification').style.display = 'block';
+                            const notification = document.getElementById('notification');
+                            notification.style.display = 'block';
+
+                            setTimeout(() => {
+                                notification.style.display = 'none';
+                            }, 5000); // Hide notification after 5 seconds
                         }
                     });
 
