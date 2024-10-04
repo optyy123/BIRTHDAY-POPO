@@ -1,7 +1,8 @@
-
+<!DOCTYPE html>
 <html>
 <head>
     <title>Countdown to Your Special Day! 🎉</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -10,39 +11,46 @@
             background-image: url('https://your-link-to-background-image.com');
             background-size: cover;
             overflow: hidden;
-            position: relative;
+            margin: 0;
+            padding: 0;
             height: 100vh; /* Full view height */
         }
         h1 {
             color: #ff69b4;
-            font-size: 3em;
+            font-size: 2.5em;
         }
         #countdown {
             font-size: 2em;
             color: #ff4500;
         }
+        #counter {
+            font-size: 2em;
+            color: #32CD32;
+            margin-top: 20px;
+        }
         .hidden {
             display: none;
-        }
-        button {
-            background-color: #ff69b4;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #ff1493;
         }
         .emoji {
             position: absolute;
             font-size: 2em;
-            width: 80px; /* Enlarging the hitbox */
-            height: 80px;
+            width: 60px;
+            height: 60px;
             user-select: none;
-            cursor: pointer;
-            transition: transform 10s ease, opacity 0.5s ease; /* Slower falling transition */
+            transition: transform 8s ease, opacity 0.5s ease;
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            #countdown {
+                font-size: 1.5em;
+            }
+            .emoji {
+                font-size: 1.5em;
+                width: 50px;
+                height: 50px;
+            }
         }
     </style>
     <script>
@@ -69,18 +77,18 @@
 
         // Emojis array with balloons, confetti, and heart emojis
         const emojis = ['🎈', '🎉', '❤️', '💖', '💘'];
+        let counter = 0;
 
-        // Function to apply very slow, paper-like floating behavior
+        // Function to apply slower, paper-like floating behavior
         function applySlowFloating(emoji) {
-            let velocityY = Math.random() * -4 - 4; // Slower upward velocity
-            let velocityX = (Math.random() - 0.5) * 3; // Slower horizontal movement
-            const gravity = 0.03; // Lower gravity for very slow fall
-            const drag = 0.995; // Small drag to make the emoji float gently
+            let velocityY = Math.random() * -4 - 4; // Slow upward velocity
+            let velocityX = (Math.random() - 0.5) * 3; // Slight horizontal movement
+            const gravity = 0.03; // Low gravity for slow floating
 
             function updatePosition() {
-                // Apply gravity and drag for slow floating
+                // Apply gravity and slight drag for smooth floating
                 velocityY += gravity;
-                velocityX *= drag;
+                velocityX *= 0.995;
 
                 // Update the emoji's position
                 const currentTop = parseFloat(emoji.style.top) || 0;
@@ -88,18 +96,13 @@
                 emoji.style.top = (currentTop + velocityY) + 'px';
                 emoji.style.left = (currentLeft + velocityX) + 'px';
 
-                // Remove emoji after 1 minute
-                setTimeout(() => {
-                    emoji.remove();
-                }, 60000);
-
-                // Keep applying physics for smooth floating
+                // Keep applying the floating effect
                 requestAnimationFrame(updatePosition);
             }
             updatePosition();
         }
 
-        // Function to throw emojis with very slow floating behavior
+        // Function to throw emojis with slow floating behavior
         function throwEmojis() {
             const emojiContainer = document.createElement('div');
             document.body.appendChild(emojiContainer);
@@ -117,60 +120,31 @@
                     emoji.style.left = Math.random() * window.innerWidth + 'px';
                     emoji.style.top = window.innerHeight - 50 + 'px'; // Start near the bottom
 
-                    // Make the emoji draggable/throwable
-                    let isDragging = false;
-                    let startX, startY;
+                    // Touch or click event to count and make it disappear
+                    emoji.addEventListener('click', () => {
+                        emoji.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+                        emoji.style.transform = 'scale(1.5) translateY(-150px)'; // Quick flight upward
+                        emoji.style.opacity = '0';
 
-                    // Mouse or touch start
-                    emoji.addEventListener('mousedown', (e) => {
-                        isDragging = true;
-                        startX = e.clientX - parseInt(emoji.style.left);
-                        startY = e.clientY - parseInt(emoji.style.top);
-                    });
+                        // Show sparkle emoji when it disappears
+                        setTimeout(() => {
+                            emoji.innerText = '✨';
+                            setTimeout(() => {
+                                emoji.remove();
+                            }, 500); // Remove emoji after sparkle effect
+                        }, 500);
 
-                    document.addEventListener('mousemove', (e) => {
-                        if (isDragging) {
-                            emoji.style.left = e.clientX - startX + 'px';
-                            emoji.style.top = e.clientY - startY + 'px';
-                        }
-                    });
-
-                    document.addEventListener('mouseup', () => {
-                        if (isDragging) {
-                            isDragging = false;
-                            applySlowFloating(emoji); // Apply slow floating after it's thrown
-                        }
-                    });
-
-                    // Touch events for mobile
-                    emoji.addEventListener('touchstart', (e) => {
-                        isDragging = true;
-                        const touch = e.touches[0];
-                        startX = touch.clientX - parseInt(emoji.style.left);
-                        startY = touch.clientY - parseInt(emoji.style.top);
-                    });
-
-                    document.addEventListener('touchmove', (e) => {
-                        if (isDragging) {
-                            const touch = e.touches[0];
-                            emoji.style.left = touch.clientX - startX + 'px';
-                            emoji.style.top = touch.clientY - startY + 'px';
-                        }
-                    });
-
-                    document.addEventListener('touchend', () => {
-                        if (isDragging) {
-                            isDragging = false;
-                            applySlowFloating(emoji); // Apply slow floating after it's thrown
-                        }
+                        // Increment the counter
+                        counter++;
+                        document.getElementById('counter').innerText = `Touched Emojis: ${counter}`;
                     });
 
                     // Append emoji to container
                     emojiContainer.appendChild(emoji);
 
-                    // Apply initial slow floating effect
+                    // Apply the slow floating effect
                     applySlowFloating(emoji);
-                }, Math.random() * 1500); // Delay the emoji launches for more randomness
+                }, Math.random() * 1500); // Delay the emoji launches for randomness
             }
         }
 
@@ -184,6 +158,8 @@
     <p>I'm so excited for your special day!</p>
     
     <div id="countdown"></div>
+
+    <div id="counter">Touched Emojis: 0</div>
 
     <div id="revealMessage" class="hidden reveal">
         <p>🎉 The wait is over! 🎉</p>
