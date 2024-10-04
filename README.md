@@ -7,7 +7,7 @@
             font-family: 'Arial', sans-serif;
             text-align: center;
             background-color: #ffe4e1;
-            background-image: url('https://marketplace.canva.com/EAE9YvLQdzg/1/0/1600w/canva-blue-purple-colorful-birthday-zoom-virtual-background-tkbW_FNbhXg.jpg'); /* You can add a birthday-themed background here */
+            background-image: url('https://img.freepik.com/premium-photo/beige-paper-texture-background-kraft-paper-aesthetic-creative-design_364465-632.jpg'); /* You can add a birthday-themed background here */
             background-size: cover;
         }
         h1 {
@@ -16,7 +16,7 @@
         }
         #countdown {
             font-size: 2em;
-            color: #ff4500;
+            color: #000000;
         }
         .balloons {
             margin-top: 20px;
@@ -79,7 +79,7 @@
     <div id="countdown"></div>
     
     <div class="balloons">
-        <img src="https://your-link-to-balloon-image.com" alt="Balloons" style="width:200px;">
+        <img src="https://purepng.com/public/uploads/large/balloons-pxn.png" alt="Balloons" style="width:200px;">
         <!-- Add more birthday decoration images like balloons, confetti, cake, etc. -->
     </div>
 
