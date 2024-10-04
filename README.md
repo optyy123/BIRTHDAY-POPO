@@ -8,7 +8,6 @@
             font-family: 'Arial', sans-serif;
             text-align: center;
             background-color: #ffe4e1;
-            background-image: url('https://your-link-to-background-image.com');
             background-size: cover;
             overflow: hidden;
             margin: 0;
@@ -33,14 +32,23 @@
             display: inline-block;
             box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
         }
+        .notification {
+            font-size: 1.5em;
+            color: #ffffff;
+            background-color: #32CD32;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
         .hidden {
             display: none;
         }
         .emoji {
             position: absolute;
-            font-size: 2em;
-            width: 80px; /* Larger hitbox */
-            height: 80px;
+            font-size: 2.5em;
+            width: 100px; /* Larger hitbox */
+            height: 100px;
             user-select: none;
             transition: transform 8s ease, opacity 0.5s ease;
         }
@@ -52,9 +60,9 @@
                 font-size: 1.5em;
             }
             .emoji {
-                font-size: 1.5em;
-                width: 60px;
-                height: 60px;
+                font-size: 2em;
+                width: 80px;
+                height: 80px;
             }
             #counter {
                 font-size: 2em;
@@ -86,6 +94,7 @@
         // Emojis array with balloons, confetti, and heart emojis
         const emojis = ['🎈', '🎉', '❤️', '💖', '💘'];
         let counter = 0;
+        let missedEmojis = 0;
 
         // Function to apply slow floating behavior
         function applySlowFloating(emoji) {
@@ -103,6 +112,20 @@
                 emoji.style.top = (currentTop + velocityY) + 'px';
                 emoji.style.left = (currentLeft + velocityX) + 'px';
 
+                // Remove emoji if it reaches the bottom of the screen (untouched)
+                if (parseFloat(emoji.style.top) > window.innerHeight) {
+                    emoji.remove();
+                    missedEmojis++;
+                    counter--;
+                    document.getElementById('counter').innerText = `Touched Emojis: ${counter}`;
+
+                    // Cap counter at zero
+                    if (counter < 0) {
+                        counter = 0;
+                        document.getElementById('counter').innerText = `Touched Emojis: 0`;
+                    }
+                }
+
                 requestAnimationFrame(updatePosition);
             }
             updatePosition();
@@ -113,7 +136,8 @@
             const emojiContainer = document.createElement('div');
             document.body.appendChild(emojiContainer);
 
-            const emojiCount = Math.floor(Math.random() * 8) + 3;
+            // Reduce the number of emojis to between 2 and 5
+            const emojiCount = Math.floor(Math.random() * 4) + 2;
 
             for (let i = 0; i < emojiCount; i++) {
                 setTimeout(() => {
@@ -131,6 +155,7 @@
                         emoji.style.transform = 'scale(1.5) translateY(-150px)';
                         emoji.style.opacity = '0';
 
+                        // Show sparkle emoji and remove after sparkle
                         setTimeout(() => {
                             emoji.innerText = '✨';
                             setTimeout(() => {
@@ -141,6 +166,11 @@
                         // Increment counter
                         counter++;
                         document.getElementById('counter').innerText = `Touched Emojis: ${counter}`;
+
+                        // Show notification after 5 touches
+                        if (counter === 5) {
+                            document.getElementById('notification').style.display = 'block';
+                        }
                     });
 
                     // Append emoji to container
@@ -163,6 +193,10 @@
     <div id="countdown"></div>
 
     <div id="counter">Touched Emojis: 0</div>
+
+    <div id="notification" class="notification">
+        There will be hints! 🔍🎁
+    </div>
 
     <div id="revealMessage" class="hidden reveal">
         <p>🎉 The wait is over! 🎉</p>
