@@ -40,7 +40,7 @@
             font-size: 2em;
             user-select: none;
             cursor: pointer;
-            transition: transform 1s ease, opacity 0.5s ease;
+            transition: transform 3s ease, opacity 0.5s ease;
         }
     </style>
     <script>
@@ -68,15 +68,15 @@
         // Emojis array with balloons, confetti, and heart emojis
         const emojis = ['🎈', '🎉', '❤️', '💖', '💘'];
 
-        // Function to apply gravity and randomness for falling
-        function applyPhysics(emoji) {
-            let velocityY = Math.random() * -20 - 20; // Initial upward velocity
-            let velocityX = (Math.random() - 0.5) * 20; // Horizontal velocity
-            const gravity = 1.5; // Gravity factor
-            const drag = 0.99; // Drag for friction effect
+        // Function to apply slower gravity and random falling behavior
+        function applySlowPhysics(emoji) {
+            let velocityY = Math.random() * -10 - 10; // Slower upward velocity
+            let velocityX = (Math.random() - 0.5) * 5; // Slower horizontal velocity
+            const gravity = 0.5; // Slow gravity factor
+            const drag = 0.98; // Drag for friction effect
 
             function updatePosition() {
-                // Apply gravity and friction to the movement
+                // Apply gravity and drag for slower falling
                 velocityY += gravity;
                 velocityX *= drag;
 
@@ -88,7 +88,7 @@
 
                 // Check if the emoji hits the bottom of the screen
                 if (currentTop + velocityY > window.innerHeight - 50) {
-                    velocityY = -velocityY * 0.8; // Bounce up a bit
+                    velocityY = -velocityY * 0.7; // Bounce up a bit slower
                 }
 
                 // Remove emoji after 1 minute
@@ -102,7 +102,7 @@
             updatePosition();
         }
 
-        // Function to randomly throw emojis with physics-like behavior
+        // Function to throw emojis with slow physics-like behavior
         function throwEmojis() {
             const emojiContainer = document.createElement('div');
             document.body.appendChild(emojiContainer);
@@ -141,7 +141,7 @@
                     document.addEventListener('mouseup', () => {
                         if (isDragging) {
                             isDragging = false;
-                            applyPhysics(emoji); // Apply gravity after it's thrown
+                            applySlowPhysics(emoji); // Apply slower gravity after it's thrown
                         }
                     });
 
@@ -164,21 +164,22 @@
                     document.addEventListener('touchend', () => {
                         if (isDragging) {
                             isDragging = false;
-                            applyPhysics(emoji); // Apply gravity after it's thrown
+                            applySlowPhysics(emoji); // Apply slower gravity after it's thrown
                         }
                     });
 
                     // Append emoji to container
                     emojiContainer.appendChild(emoji);
 
-                    // Apply initial gravity and physics
-                    applyPhysics(emoji);
+                    // Apply initial slow gravity and physics
+                    applySlowPhysics(emoji);
                 }, Math.random() * 1000); // Delay the emoji launches for more randomness
             }
         }
 
-        // Throw emojis every 5 seconds
-        setInterval(throwEmojis, 5000);
+        // Start throwing emojis immediately
+        throwEmojis();
+        setInterval(throwEmojis, 5000); // Re-throw emojis every 5 seconds
     </script>
 </head>
 <body>
