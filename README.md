@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html>
 <head>
     <title>Countdown to Your Special Day! 🎉</title>
@@ -47,8 +47,8 @@
         .emoji {
             position: absolute;
             font-size: 2.5em;
-            width: 100px; /* Larger hitbox */
-            height: 100px;
+            width: 120px; /* Larger hitbox */
+            height: 120px;
             user-select: none;
             transition: transform 8s ease, opacity 0.5s ease;
         }
@@ -61,8 +61,8 @@
             }
             .emoji {
                 font-size: 2em;
-                width: 80px;
-                height: 80px;
+                width: 100px;
+                height: 100px;
             }
             #counter {
                 font-size: 2em;
@@ -98,9 +98,9 @@
 
         // Function to apply slow floating behavior
         function applySlowFloating(emoji) {
-            let velocityY = Math.random() * -4 - 4; // Slow upward velocity
+            let velocityY = Math.random() * -3 - 3; // Slow upward velocity
             let velocityX = (Math.random() - 0.5) * 3; // Slight horizontal movement
-            const gravity = 0.03; // Low gravity for slow floating
+            const gravity = 0.02; // Slower fall due to gravity
 
             function updatePosition() {
                 velocityY += gravity;
@@ -116,13 +116,9 @@
                 if (parseFloat(emoji.style.top) > window.innerHeight) {
                     emoji.remove();
                     missedEmojis++;
-                    counter--;
-                    document.getElementById('counter').innerText = `Touched Emojis: ${counter}`;
-
-                    // Cap counter at zero
-                    if (counter < 0) {
-                        counter = 0;
-                        document.getElementById('counter').innerText = `Touched Emojis: 0`;
+                    if (counter > 0) { // Only decrement if counter is above 0
+                        counter--;
+                        document.getElementById('counter').innerText = `Touched Emojis: ${counter}`;
                     }
                 }
 
@@ -136,8 +132,8 @@
             const emojiContainer = document.createElement('div');
             document.body.appendChild(emojiContainer);
 
-            // Reduce the number of emojis to between 2 and 5
-            const emojiCount = Math.floor(Math.random() * 4) + 2;
+            // Reduce the number of emojis to between 1 and 2
+            const emojiCount = Math.floor(Math.random() * 2) + 1;
 
             for (let i = 0; i < emojiCount; i++) {
                 setTimeout(() => {
