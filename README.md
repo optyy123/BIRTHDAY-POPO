@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html>
 <head>
     <title>Countdown to Your Special Day! 🎉</title>
@@ -38,9 +38,11 @@
         .emoji {
             position: absolute;
             font-size: 2em;
+            width: 80px; /* Enlarging the hitbox */
+            height: 80px;
             user-select: none;
             cursor: pointer;
-            transition: transform 7s ease, opacity 0.5s ease;
+            transition: transform 10s ease, opacity 0.5s ease; /* Slower falling transition */
         }
     </style>
     <script>
@@ -68,15 +70,15 @@
         // Emojis array with balloons, confetti, and heart emojis
         const emojis = ['🎈', '🎉', '❤️', '💖', '💘'];
 
-        // Function to apply even slower and higher floating behavior
+        // Function to apply very slow, paper-like floating behavior
         function applySlowFloating(emoji) {
-            let velocityY = Math.random() * -5 - 5; // Slow upward velocity to reach higher
-            let velocityX = (Math.random() - 0.5) * 1; // Slight horizontal movement
-            const gravity = 0.05; // Lower gravity for a slower fall
+            let velocityY = Math.random() * -4 - 4; // Slower upward velocity
+            let velocityX = (Math.random() - 0.5) * 3; // Slower horizontal movement
+            const gravity = 0.03; // Lower gravity for very slow fall
             const drag = 0.995; // Small drag to make the emoji float gently
 
             function updatePosition() {
-                // Apply gravity and drag for very slow floating
+                // Apply gravity and drag for slow floating
                 velocityY += gravity;
                 velocityX *= drag;
 
