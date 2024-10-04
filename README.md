@@ -7,7 +7,7 @@
             font-family: 'Arial', sans-serif;
             text-align: center;
             background-color: #ffe4e1;
-            background-image: url('https://img.freepik.com/premium-photo/beige-paper-texture-background-kraft-paper-aesthetic-creative-design_364465-632.jpg'); /* You can add a birthday-themed background here */
+            background-image: url(''); /* You can add a birthday-themed background here */
             background-size: cover;
         }
         h1 {
@@ -16,7 +16,7 @@
         }
         #countdown {
             font-size: 2em;
-            color: #000000;
+            color: #00FFFF;
         }
         .balloons {
             margin-top: 20px;
@@ -42,7 +42,7 @@
     </style>
     <script>
         // Set the date for her birthday
-        var countDownDate = new Date("Oct 18, 2024 00:00:00").getTime();
+        var countDownDate = new Date("Oct 4, 2024 13:20:00").getTime();
 
         // Update the countdown every second
         var countdownFunction = setInterval(function() {
