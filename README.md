@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html>
 <head>
     <title>Countdown to Your Special Day! 🎉</title>
@@ -40,7 +40,7 @@
             font-size: 2em;
             user-select: none;
             cursor: pointer;
-            transition: transform 5s ease, opacity 0.5s ease;
+            transition: transform 7s ease, opacity 0.5s ease;
         }
     </style>
     <script>
@@ -68,15 +68,15 @@
         // Emojis array with balloons, confetti, and heart emojis
         const emojis = ['🎈', '🎉', '❤️', '💖', '💘'];
 
-        // Function to apply slow, paper-like floating motion
+        // Function to apply even slower and higher floating behavior
         function applySlowFloating(emoji) {
-            let velocityY = Math.random() * -2 - 3; // Very slow upward velocity
-            let velocityX = (Math.random() - 0.5) * 2; // Slow horizontal movement
-            const gravity = 0.2; // Small gravity factor for paper-like floating
-            const drag = 0.98; // Drag for slight slowing effect
+            let velocityY = Math.random() * -5 - 5; // Slow upward velocity to reach higher
+            let velocityX = (Math.random() - 0.5) * 1; // Slight horizontal movement
+            const gravity = 0.05; // Lower gravity for a slower fall
+            const drag = 0.995; // Small drag to make the emoji float gently
 
             function updatePosition() {
-                // Apply gravity and drag for slow floating
+                // Apply gravity and drag for very slow floating
                 velocityY += gravity;
                 velocityX *= drag;
 
@@ -97,7 +97,7 @@
             updatePosition();
         }
 
-        // Function to throw emojis with slow floating behavior
+        // Function to throw emojis with very slow floating behavior
         function throwEmojis() {
             const emojiContainer = document.createElement('div');
             document.body.appendChild(emojiContainer);
@@ -168,7 +168,7 @@
 
                     // Apply initial slow floating effect
                     applySlowFloating(emoji);
-                }, Math.random() * 1000); // Delay the emoji launches for more randomness
+                }, Math.random() * 1500); // Delay the emoji launches for more randomness
             }
         }
 
