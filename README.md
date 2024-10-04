@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html>
 <head>
     <title>Countdown to Your Special Day! 🎉</title>
@@ -94,7 +94,6 @@
         // Emojis array with balloons, confetti, hearts, and gifts
         const emojis = ['🎈', '🎉', '❤️', '💖', '💘', '💙', '🎁'];
         let counter = 0;
-        let missedEmojis = 0;
 
         // Function to apply slow floating behavior
         function applySlowFloating(emoji) {
@@ -115,10 +114,6 @@
                 // Remove emoji if it reaches the bottom of the screen (untouched)
                 if (parseFloat(emoji.style.top) > window.innerHeight) {
                     emoji.remove();
-                    if (counter > 0) { // Only decrement if counter is above 0
-                        counter--;
-                        document.getElementById('counter').innerText = `Touched Emojis: ${counter}`;
-                    }
                 }
 
                 requestAnimationFrame(updatePosition);
