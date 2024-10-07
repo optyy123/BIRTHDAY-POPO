@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -45,21 +45,23 @@
         .notification {
             font-size: 1.5em;
             color: white;
-            background-color: #ff69b4;
+            background-color: #32a852; /* Changed to a pleasant green */
             padding: 15px;
             border-radius: 10px;
-            display: none;
             position: absolute;
             top: -50px;
             left: 50%;
             transform: translateX(-50%);
             opacity: 0;
-            transition: opacity 0.5s, top 0.5s;
+            transition: opacity 1s ease-in-out, top 1s ease-in-out;
         }
         .notification.show {
-            display: block;
             top: 20px;
             opacity: 1;
+        }
+        .notification.hide {
+            top: -50px;
+            opacity: 0;
         }
         .emoji {
             position: absolute;
@@ -151,10 +153,10 @@
             setTimeout(() => emoji.remove(), 10000);
         }
 
-        // Function to animate emojis with slow float
+        // Function to animate emojis with slow float and higher movement
         function animateEmoji(emoji) {
             const gravity = 0.03;
-            let velocityY = Math.random() * -2 - 1;
+            let velocityY = Math.random() * -2 - 2;
             let velocityX = (Math.random() - 0.5) * 2;
 
             function updatePosition() {
