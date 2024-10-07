@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown to Your Birthday! 🎉</title>
+    <title>Cute Birthday Countdown! 🎉</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
             background-color: #fff0f5;
             margin: 0;
             padding: 0;
@@ -17,12 +17,19 @@
             height: 100vh;
             text-align: center;
             overflow: hidden;
+            position: relative;
         }
-        .content {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        /* Add a cute border around the page */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 10px solid #ff69b4;
+            border-radius: 20px;
+            pointer-events: none; /* Ensure border doesn't block interactions */
         }
         h1 {
             color: #ff69b4;
@@ -65,6 +72,14 @@
             top: 20px;
             opacity: 1;
         }
+        /* Center the reward images below the counter */
+        .reward-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 20px;
+        }
         .reward-image {
             display: none;
             opacity: 0;
@@ -74,6 +89,21 @@
         }
         .reward-image.show {
             display: block;
+            opacity: 1;
+        }
+        /* Cute popup text */
+        .popup-text {
+            position: absolute;
+            font-size: 1.8em;
+            color: #ff69b4;
+            background-color: rgba(255, 182, 193, 0.6);
+            padding: 10px 15px;
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            pointer-events: none; /* Ensure text doesn't interfere with clicks */
+        }
+        .popup-text.show {
             opacity: 1;
         }
         .emoji {
@@ -97,22 +127,26 @@
 <body>
     <div class="content">
         <h1>Countdown to Your Birthday! 🎉</h1>
-        <p>I'm so excited for your special day!</p>
+        <p>You are my everything! 💖</p>
 
         <div id="countdown"></div>
         <div id="counter">Touched Emojis: 0</div>
 
-        <!-- Reward images -->
-        <img id="reward-image-8" src="https://i.imgur.com/2hjw8IS.png" alt="Reward Image 1" class="reward-image">
-        <img id="reward-image-10" src="https://i.imgur.com/Dna92xG.png" alt="Reward Image 2" class="reward-image">
-        <img id="reward-image-13" src="https://i.imgur.com/2LJDX4X.png" alt="Reward Image 3" class="reward-image">
+        <!-- Centered reward images below the counter -->
+        <div class="reward-container">
+            <img id="reward-image-8" src="https://i.imgur.com/2hjw8IS.png" alt="Reward Image 1" class="reward-image">
+            <img id="reward-image-10" src="https://i.imgur.com/Dna92xG.png" alt="Reward Image 2" class="reward-image">
+            <img id="reward-image-13" src="https://i.imgur.com/2LJDX4X.png" alt="Reward Image 3" class="reward-image">
+        </div>
     </div>
 
     <div id="notification" class="notification"></div>
+    <div id="popupText" class="popup-text"></div>
 
     <script>
         const countDownDate = new Date("Oct 18, 2024 00:00:00").getTime();
         const counterElement = document.getElementById('counter');
+        const popupTextElement = document.getElementById('popupText');
         const rewardImage8 = document.getElementById('reward-image-8');
         const rewardImage10 = document.getElementById('reward-image-10');
         const rewardImage13 = document.getElementById('reward-image-13');
@@ -202,50 +236,62 @@
                     requestAnimationFrame(updatePosition);
                 }
             }
-
             updatePosition();
         }
+
+        setInterval(createEmoji, 2000);
 
         function showNotification(message) {
             const notification = document.getElementById('notification');
             notification.innerText = message;
             notification.classList.add('show');
-
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 5000);
+            setTimeout(() => notification.classList.remove('show'), 5000);
         }
 
         function showRewardImage8() {
             rewardImage8.classList.add('show');
         }
-
         function hideRewardImage8() {
             rewardImage8.classList.remove('show');
         }
-
         function showRewardImage10() {
             rewardImage10.classList.add('show');
         }
-
         function hideRewardImage10() {
             rewardImage10.classList.remove('show');
         }
-
         function showRewardImage13() {
             rewardImage13.classList.add('show');
         }
-
         function hideRewardImage13() {
             rewardImage13.classList.remove('show');
         }
 
-        setInterval(() => {
-            const emojiCount = Math.floor(Math.random() * 2) + 1;
-            for (let i = 0; i < emojiCount; i++) {
-                createEmoji();
-            }
-        }, Math.random() * 1000 + 1000);
+        /* Cute popup text */
+        const cutePhrases = [
+            "You are my everything! 💖",
+            "Love you to the moon and back! 🌙",
+            "You're the best! 🌟",
+            "You're my sunshine ☀️"
+        ];
+
+        function showPopupText() {
+            const phrase = cutePhrases[Math.floor(Math.random() * cutePhrases.length)];
+            popupTextElement.innerText = phrase;
+
+            const randomX = Math.random() * (window.innerWidth - 200);
+            const randomY = Math.random() * (window.innerHeight - 100);
+
+            popupTextElement.style.left = randomX + 'px';
+            popupTextElement.style.top = randomY + 'px';
+            popupTextElement.classList.add('show');
+
+            setTimeout(() => {
+                popupTextElement.classList.remove('show');
+            }, 3000);
+        }
+
+        setInterval(showPopupText, 5000);
     </script>
 </body>
 </html>
