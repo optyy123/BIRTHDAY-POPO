@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -43,12 +43,14 @@
             box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
         }
         .reward-image {
-            max-width: 300px;
+            width: 250px;
+            height: 250px;
             opacity: 0;
             transition: opacity 1.5s ease-in-out;
             position: absolute;
-            z-index: 1;
-            top: 40%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
         .reward-image.show {
             opacity: 1;
@@ -64,7 +66,6 @@
             padding: 12px;
             border-radius: 8px;
             box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
-            animation: fadeDown 0.8s ease-in-out forwards;
             display: none;
         }
         .emoji {
@@ -74,10 +75,6 @@
             cursor: pointer;
             transition: transform 0.5s ease, opacity 0.5s ease;
             padding: 10px;
-        }
-        @keyframes fadeDown {
-            0% { opacity: 0; transform: translateY(-20px); }
-            100% { opacity: 1; transform: translateY(0); }
         }
         @media (max-width: 768px) {
             h1 { font-size: 2.5em; }
@@ -96,7 +93,7 @@
     <img id="image2" class="reward-image" src="https://i.imgur.com/Dna92xG.png" alt="Reward Image 2">
     <img id="image3" class="reward-image" src="https://i.imgur.com/2LJDX4X.png" alt="Reward Image 3">
 
-    <div id="notification" class="notification">🎉 You've touched an emoji! 🎉</div>
+    <div id="notification" class="notification">I'm so sorry 😞</div>
 
     <script>
         const countDownDate = new Date("Oct 18, 2024 00:00:00").getTime();
@@ -135,7 +132,13 @@
         function handleCounter() {
             counter++;
 
-            if (counter === 8) {
+            if (counter === 1) {
+                notification.innerHTML = "I'm so sorry 😞";
+                showNotification();
+            } else if (counter === 5) {
+                notification.innerHTML = "Hint: Something exciting is coming soon!";
+                showNotification();
+            } else if (counter === 8) {
                 showImage(document.getElementById('image1'));
             } else if (counter === 10) {
                 hideImage(document.getElementById('image1'));
@@ -151,16 +154,13 @@
             }
 
             counterElement.innerText = `Touched Emojis: ${counter}`;
-            showNotification();
         }
 
         function showNotification() {
             notification.style.display = 'block';
-            notification.classList.add('show');
 
             setTimeout(() => {
                 notification.style.display = 'none';
-                notification.classList.remove('show');
             }, 2000);
         }
 
