@@ -1,18 +1,18 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birthday Countdown</title>
+    <title>Countdown to Your Birthday! 🎉</title>
     <style>
         body {
-            font-family: 'Comic Sans MS', sans-serif;
-            background-color: #ffe4e1;
+            font-family: 'Arial', sans-serif;
+            background-color: #fff0f5;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: center;
             height: 100vh;
             text-align: center;
@@ -20,53 +20,56 @@
         }
         h1 {
             color: #ff69b4;
-            font-size: 2.5em;
-            margin-top: 20px;
-            text-shadow: 2px 2px #fff;
+            font-size: 3em;
+            margin-bottom: 0;
         }
         p {
             color: #ff1493;
             font-size: 1.5em;
-            margin-bottom: 10px;
         }
         #countdown {
-            font-size: 1.8em;
+            font-size: 2.5em;
             color: #ff4500;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
         #counter {
-            font-size: 2em;
+            font-size: 2.5em;
             color: #ffffff;
             background-color: #ff69b4;
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            margin-top: 10px;
+            display: inline-block;
             box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
         }
-        .reward-image {
-            width: 250px;
-            height: 250px;
-            opacity: 0;
-            transition: opacity 1.5s ease-in-out;
+        .notification {
+            font-size: 1.5em;
+            color: white;
+            background-color: #32a852;
+            padding: 15px;
+            border-radius: 10px;
             position: absolute;
-            top: 50%;
+            top: -50px;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 1s ease-in-out, top 1s ease-in-out;
         }
-        .reward-image.show {
+        .notification.show {
+            top: 20px;
             opacity: 1;
         }
-        .hide {
-            opacity: 0;
-        }
-        #notification {
-            position: absolute;
-            top: 20px;
-            background-color: #ff1493;
-            color: #fff;
-            padding: 12px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+        .reward-image {
             display: none;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            margin-top: 20px;
+            max-width: 250px;
+            height: 250px;
+        }
+        .reward-image.show {
+            display: block;
+            opacity: 1;
         }
         .emoji {
             position: absolute;
@@ -74,35 +77,41 @@
             user-select: none;
             cursor: pointer;
             transition: transform 0.5s ease, opacity 0.5s ease;
-            padding: 10px;
+            padding: 15px;
         }
         @media (max-width: 768px) {
-            h1 { font-size: 2.5em; }
-            p, #countdown { font-size: 1.2em; }
+            h1 {
+                font-size: 2.5em;
+            }
+            p, #countdown {
+                font-size: 1.5em;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>BIRTHDAY-POPO</h1>
-    <p>Countdown to Your Birthday! 🎉</p>
+    <h1>Countdown to Your Birthday! 🎉</h1>
+    <p>I'm so excited for your special day!</p>
 
     <div id="countdown"></div>
     <div id="counter">Touched Emojis: 0</div>
+    
+    <!-- Reward images -->
+    <img id="reward-image-8" src="https://i.imgur.com/2hjw8IS.png" alt="Reward Image 1" class="reward-image">
+    <img id="reward-image-10" src="https://i.imgur.com/Dna92xG.png" alt="Reward Image 2" class="reward-image">
+    <img id="reward-image-13" src="https://i.imgur.com/2LJDX4X.png" alt="Reward Image 3" class="reward-image">
 
-    <img id="image1" class="reward-image" src="https://i.imgur.com/2hjw8IS.png" alt="Reward Image 1">
-    <img id="image2" class="reward-image" src="https://i.imgur.com/Dna92xG.png" alt="Reward Image 2">
-    <img id="image3" class="reward-image" src="https://i.imgur.com/2LJDX4X.png" alt="Reward Image 3">
-
-    <div id="notification" class="notification">I'm so sorry 😞</div>
+    <div id="notification" class="notification"></div>
 
     <script>
         const countDownDate = new Date("Oct 18, 2024 00:00:00").getTime();
         const counterElement = document.getElementById('counter');
-        const notification = document.getElementById('notification');
+        const rewardImage8 = document.getElementById('reward-image-8');
+        const rewardImage10 = document.getElementById('reward-image-10');
+        const rewardImage13 = document.getElementById('reward-image-13');
 
         let counter = 0;
 
-        // Countdown logic
         const countdownFunction = setInterval(() => {
             const now = new Date().getTime();
             const distance = countDownDate - now;
@@ -110,7 +119,7 @@
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            const seconds = Math.floor((distance % 1000 * 60) / 1000);
 
             document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
@@ -120,51 +129,6 @@
             }
         }, 1000);
 
-        // Show and hide images
-        function showImage(imgElement) {
-            imgElement.classList.add('show');
-        }
-
-        function hideImage(imgElement) {
-            imgElement.classList.remove('show');
-        }
-
-        function handleCounter() {
-            counter++;
-
-            if (counter === 1) {
-                notification.innerHTML = "I'm so sorry 😞";
-                showNotification();
-            } else if (counter === 5) {
-                notification.innerHTML = "Hint: Something exciting is coming soon!";
-                showNotification();
-            } else if (counter === 8) {
-                showImage(document.getElementById('image1'));
-            } else if (counter === 10) {
-                hideImage(document.getElementById('image1'));
-                showImage(document.getElementById('image2'));
-            } else if (counter === 13) {
-                hideImage(document.getElementById('image2'));
-                const image3 = document.getElementById('image3');
-                showImage(image3);
-
-                setTimeout(() => {
-                    hideImage(image3);
-                }, 5000);
-            }
-
-            counterElement.innerText = `Touched Emojis: ${counter}`;
-        }
-
-        function showNotification() {
-            notification.style.display = 'block';
-
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 2000);
-        }
-
-        // Emojis interaction
         const emojis = ['🎈', '🎉', '❤️', '💖', '💘', '💙', '🎁'];
 
         function createEmoji() {
@@ -180,10 +144,30 @@
                 emoji.style.opacity = '0';
 
                 setTimeout(() => {
-                    emoji.remove();
-                }, 500);
+                    emoji.innerText = '✨'; // Sparkle effect
+                    setTimeout(() => emoji.remove(), 500);
+                }, 300);
 
-                handleCounter();
+                counter++;
+                counterElement.innerText = `Touched Emojis: ${counter}`;
+
+                if (counter === 1) {
+                    showNotification("I'm really sorry and I'm working on myself");
+                } else if (counter === 5) {
+                    showNotification("There will be hints! 🔍🎁");
+                } else if (counter === 8) {
+                    showRewardImage8();
+                } else if (counter === 10) {
+                    hideRewardImage8();
+                    showRewardImage10();
+                } else if (counter === 13) {
+                    hideRewardImage10();
+                    showRewardImage13();
+                    setTimeout(() => {
+                        hideRewardImage13();
+                        showNotification("The end 💕");
+                    }, 5000);
+                }
             });
 
             document.body.appendChild(emoji);
@@ -193,11 +177,12 @@
         }
 
         function animateEmoji(emoji) {
+            const gravity = 0.01; 
             let velocityY = Math.random() * -2 - 3; 
             let velocityX = (Math.random() - 0.5) * 2;
 
             function updatePosition() {
-                velocityY += 0.01;
+                velocityY += gravity;
                 const currentTop = parseFloat(emoji.style.top) || 0;
                 const currentLeft = parseFloat(emoji.style.left) || 0;
 
@@ -212,6 +197,40 @@
             }
 
             updatePosition();
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.innerText = message;
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        function showRewardImage8() {
+            rewardImage8.classList.add('show');
+        }
+
+        function hideRewardImage8() {
+            rewardImage8.classList.remove('show');
+        }
+
+        function showRewardImage10() {
+            rewardImage10.classList.add('show');
+        }
+
+        function hideRewardImage10() {
+            rewardImage10.classList.remove('show');
+        }
+
+        function showRewardImage13() {
+            rewardImage13.classList.add('show');
+        }
+
+        function hideRewardImage13() {
+            rewardImage13.classList.remove('show');
         }
 
         setInterval(() => {
