@@ -1,203 +1,197 @@
-<!DOCTYPE html>
-<html>
+
+<html lang="en">
 <head>
-    <title>Countdown to Your Special Day! 🎉</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown to Your Birthday! 🎉</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            text-align: center;
-            background-color: #ffe4e1;
-            background-size: cover;
-            overflow: hidden;
+            background-color: #fff0f5;
             margin: 0;
             padding: 0;
-            height: 100vh; /* Full view height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            overflow: hidden;
         }
         h1 {
             color: #ff69b4;
-            font-size: 2.5em;
+            font-size: 3em;
+            margin-bottom: 0;
+        }
+        p {
+            color: #ff1493;
+            font-size: 1.5em;
         }
         #countdown {
-            font-size: 2em;
+            font-size: 2.5em;
             color: #ff4500;
+            margin-bottom: 20px;
         }
         #counter {
             font-size: 2.5em;
-            color: white;
+            color: #ffffff;
             background-color: #ff69b4;
             padding: 10px 20px;
-            border-radius: 50px;
-            margin-top: 20px;
+            border-radius: 30px;
+            margin-top: 10px;
             display: inline-block;
             box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
         }
         .notification {
             font-size: 1.5em;
-            color: #ffffff;
-            background-color: #32CD32;
-            padding: 10px;
+            color: white;
+            background-color: #ff69b4;
+            padding: 15px;
             border-radius: 10px;
-            margin-top: 20px;
             display: none;
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.5s, top 0.5s;
         }
-        .hidden {
-            display: none;
+        .notification.show {
+            display: block;
+            top: 20px;
+            opacity: 1;
         }
         .emoji {
             position: absolute;
-            font-size: 2.5em;
-            width: 120px; /* Larger hitbox */
-            height: 120px;
+            font-size: 3em;
             user-select: none;
-            transition: transform 8s ease, opacity 0.5s ease;
+            cursor: pointer;
+            transition: transform 0.5s ease, opacity 0.5s ease;
         }
         @media (max-width: 768px) {
             h1 {
-                font-size: 2em;
+                font-size: 2.5em;
             }
-            #countdown {
+            p, #countdown {
                 font-size: 1.5em;
-            }
-            .emoji {
-                font-size: 2em;
-                width: 100px;
-                height: 100px;
-            }
-            #counter {
-                font-size: 2em;
             }
         }
     </style>
+</head>
+<body>
+    <h1>Countdown to Your Birthday! 🎉</h1>
+    <p>I'm so excited for your special day!</p>
+
+    <div id="countdown"></div>
+    <div id="counter">Touched Emojis: 0</div>
+
+    <div id="notification" class="notification"></div>
+
     <script>
-        // Countdown timer variables
-        var countDownDate = new Date("Oct 18, 2024 00:00:00").getTime();
+        // Countdown timer setup
+        const countDownDate = new Date("Oct 18, 2024 00:00:00").getTime();
 
         // Update the countdown every second
-        var countdownFunction = setInterval(function() {
-            var now = new Date().getTime();
-            var distance = countDownDate - now;
-            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            document.getElementById("countdown").innerHTML = days + "d " + hours + "h " +
-            minutes + "m " + seconds + "s ";
+        const countdownFunction = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = countDownDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
             if (distance < 0) {
                 clearInterval(countdownFunction);
-                document.getElementById("countdown").style.display = "none";
-                document.getElementById("revealMessage").style.display = "block";
+                document.getElementById("countdown").innerHTML = "Happy Birthday!";
             }
         }, 1000);
 
-        // Emojis array with balloons, confetti, hearts, and gifts
+        // Emojis array
         const emojis = ['🎈', '🎉', '❤️', '💖', '💘', '💙', '🎁'];
         let counter = 0;
 
-        // Function to apply slow floating behavior
-        function applySlowFloating(emoji) {
-            let velocityY = Math.random() * -3 - 3; // Slow upward velocity
-            let velocityX = (Math.random() - 0.5) * 3; // Slight horizontal movement
-            const gravity = 0.02; // Slower fall due to gravity
+        // Function to generate and animate emojis
+        function createEmoji() {
+            const emoji = document.createElement('div');
+            emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.classList.add('emoji');
+
+            emoji.style.left = Math.random() * window.innerWidth + 'px';
+            emoji.style.top = window.innerHeight - 50 + 'px';
+
+            // Emoji interaction and counter update
+            emoji.addEventListener('click', () => {
+                emoji.style.transform = 'scale(1.5) translateY(-150px)';
+                emoji.style.opacity = '0';
+
+                setTimeout(() => {
+                    emoji.innerText = '✨'; // Add sparkle effect
+                    setTimeout(() => emoji.remove(), 500);
+                }, 300);
+
+                counter++;
+                document.getElementById('counter').innerText = `Touched Emojis: ${counter}`;
+
+                // Notifications for 1 and 5 touches
+                const notification = document.getElementById('notification');
+                if (counter === 1) {
+                    showNotification(notification, "I'm really sorry and I'm working on myself");
+                } else if (counter === 5) {
+                    showNotification(notification, "There will be hints! 🔍🎁");
+                }
+            });
+
+            document.body.appendChild(emoji);
+            animateEmoji(emoji);
+
+            // Remove emoji after a while to avoid clutter
+            setTimeout(() => emoji.remove(), 10000);
+        }
+
+        // Function to animate emojis with slow float
+        function animateEmoji(emoji) {
+            const gravity = 0.03;
+            let velocityY = Math.random() * -2 - 1;
+            let velocityX = (Math.random() - 0.5) * 2;
 
             function updatePosition() {
                 velocityY += gravity;
-                velocityX *= 0.995;
-
-                // Update the emoji's position
                 const currentTop = parseFloat(emoji.style.top) || 0;
                 const currentLeft = parseFloat(emoji.style.left) || 0;
+
                 emoji.style.top = (currentTop + velocityY) + 'px';
                 emoji.style.left = (currentLeft + velocityX) + 'px';
 
-                // Remove emoji if it reaches the bottom of the screen (untouched)
                 if (parseFloat(emoji.style.top) > window.innerHeight) {
                     emoji.remove();
+                } else {
+                    requestAnimationFrame(updatePosition);
                 }
-
-                requestAnimationFrame(updatePosition);
             }
+
             updatePosition();
         }
 
-        // Function to throw emojis
-        function throwEmojis() {
-            const emojiContainer = document.createElement('div');
-            document.body.appendChild(emojiContainer);
+        // Function to show notifications
+        function showNotification(element, message) {
+            element.innerText = message;
+            element.classList.add('show');
 
-            // Reduce the number of emojis to between 1 and 2
-            const emojiCount = Math.floor(Math.random() * 2) + 1;
-
-            for (let i = 0; i < emojiCount; i++) {
-                setTimeout(() => {
-                    const emoji = document.createElement('div');
-                    emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                    emoji.classList.add('emoji');
-
-                    // Set random initial position at the bottom
-                    emoji.style.left = Math.random() * window.innerWidth + 'px';
-                    emoji.style.top = window.innerHeight - 50 + 'px';
-
-                    // Click or touch event to increment counter and add sparkle
-                    emoji.addEventListener('click', () => {
-                        emoji.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
-                        emoji.style.transform = 'scale(1.5) translateY(-150px)';
-                        emoji.style.opacity = '0';
-
-                        // Show sparkle emoji and remove after sparkle
-                        setTimeout(() => {
-                            emoji.innerText = '✨';
-                            setTimeout(() => {
-                                emoji.remove();
-                            }, 500);
-                        }, 500);
-
-                        // Increment counter
-                        counter++;
-                        document.getElementById('counter').innerText = `Touched Emojis: ${counter}`;
-
-                        // Show notification after 5 touches and hide after 5 seconds
-                        if (counter === 5) {
-                            const notification = document.getElementById('notification');
-                            notification.style.display = 'block';
-
-                            setTimeout(() => {
-                                notification.style.display = 'none';
-                            }, 5000); // Hide notification after 5 seconds
-                        }
-                    });
-
-                    // Append emoji to container
-                    emojiContainer.appendChild(emoji);
-
-                    applySlowFloating(emoji);
-                }, Math.random() * 1500);
-            }
+            setTimeout(() => {
+                element.classList.remove('show');
+            }, 5000);
         }
 
-        // Start throwing emojis
-        throwEmojis();
-        setInterval(throwEmojis, 5000);
+        // Start generating emojis
+        setInterval(() => {
+            const emojiCount = Math.floor(Math.random() * 2) + 1;
+            for (let i = 0; i < emojiCount; i++) {
+                createEmoji();
+            }
+        }, Math.random() * 1000 + 1000); // 1 or 2 emojis every 1-2 seconds
     </script>
-</head>
-<body>
-    <h1>Countdown to Your Birthday! 🎂🎈</h1>
-    <p>I'm so excited for your special day!</p>
-    
-    <div id="countdown"></div>
-
-    <div id="counter">Touched Emojis: 0</div>
-
-    <div id="notification" class="notification">
-        There will be hints! 🔍🎁
-    </div>
-
-    <div id="revealMessage" class="hidden reveal">
-        <p>🎉 The wait is over! 🎉</p>
-        <p>I'm bringing you something special for your birthday!</p>
-        <img src="https://eshop.thrustmaster.com/media/catalog/product/cache/2cc11eadbe5979a7883b6a1bf56c2150/t/c/tcasidestickairbusedition.webp" alt="Gift Image" style="max-width: 300px;">
-        <p>Can’t wait to see your reaction! ❤️</p>
-    </div>
 </body>
 </html>
