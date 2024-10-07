@@ -1,4 +1,3 @@
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -59,17 +58,31 @@
             top: 20px;
             opacity: 1;
         }
-        #reward-image {
+        /* Styles for all reward images */
+        .reward-image {
             display: none;
             opacity: 0;
             transition: opacity 1s ease-in-out;
-            margin-top: 20px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 20px;
             max-width: 300px;
+            background: transparent;
         }
-        #reward-image.show {
+
+        /* Fade-in and show class */
+        .reward-image.show {
             display: block;
             opacity: 1;
         }
+
+        /* Fade-out animation for the last image */
+        .reward-image.hide {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
         .emoji {
             position: absolute;
             font-size: 3em;
@@ -95,18 +108,23 @@
     <div id="countdown"></div>
     <div id="counter">Touched Emojis: 0</div>
     
-    <!-- Reward image after 8 points -->
-    <img id="reward-image" src="https://i.imgur.com/Dna92xG.png" alt="Reward Image">
+    <!-- Reward images -->
+    <img id="reward-image-1" class="reward-image" src="https://i.imgur.com/2hjw8IS.png" alt="Reward Image 1">
+    <img id="reward-image-2" class="reward-image" src="https://i.imgur.com/Dna92xG.png" alt="Reward Image 2">
+    <img id="reward-image-3" class="reward-image" src="https://i.imgur.com/2LJDX4X.png" alt="Reward Image 3">
 
     <div id="notification" class="notification"></div>
 
     <script>
         const countDownDate = new Date("Oct 18, 2024 00:00:00").getTime();
         const counterElement = document.getElementById('counter');
-        const rewardImage = document.getElementById('reward-image');
+        const rewardImage1 = document.getElementById('reward-image-1');
+        const rewardImage2 = document.getElementById('reward-image-2');
+        const rewardImage3 = document.getElementById('reward-image-3');
 
         let counter = 0;
 
+        // Countdown Timer
         const countdownFunction = setInterval(() => {
             const now = new Date().getTime();
             const distance = countDownDate - now;
@@ -151,7 +169,14 @@
                 } else if (counter === 5) {
                     showNotification("There will be hints! 🔍🎁");
                 } else if (counter === 8) {
-                    showRewardImage();
+                    showRewardImage(rewardImage1);
+                } else if (counter === 10) {
+                    showRewardImage(rewardImage2);
+                } else if (counter === 13) {
+                    showRewardImage(rewardImage3);
+                    setTimeout(() => {
+                        hideRewardImage(rewardImage3);
+                    }, 5000);
                 }
             });
 
@@ -194,10 +219,18 @@
             }, 5000);
         }
 
-        function showRewardImage() {
-            rewardImage.classList.add('show');
+        function showRewardImage(imageElement) {
+            imageElement.classList.add('show');
         }
 
+        function hideRewardImage(imageElement) {
+            imageElement.classList.add('hide');
+            setTimeout(() => {
+                imageElement.style.display = 'none';
+            }, 1000); // Fade out duration matches CSS transition
+        }
+
+        // Generate random emojis
         setInterval(() => {
             const emojiCount = Math.floor(Math.random() * 2) + 1;
             for (let i = 0; i < emojiCount; i++) {
