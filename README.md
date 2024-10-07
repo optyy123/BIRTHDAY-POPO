@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -63,6 +63,11 @@
             top: -50px;
             opacity: 0;
         }
+        #reward-image {
+            display: none;
+            margin-top: 20px;
+            max-width: 300px;
+        }
         .emoji {
             position: absolute;
             font-size: 3em;
@@ -87,11 +92,18 @@
 
     <div id="countdown"></div>
     <div id="counter">Touched Emojis: 0</div>
+    
+    <!-- Reward image after 8 points -->
+    <img id="reward-image" src="/mnt/data/Untiatled-removebg-preview.png" alt="Reward Image">
 
     <div id="notification" class="notification"></div>
 
     <script>
         const countDownDate = new Date("Oct 18, 2024 00:00:00").getTime();
+        const counterElement = document.getElementById('counter');
+        const rewardImage = document.getElementById('reward-image');
+
+        let counter = 0;
 
         const countdownFunction = setInterval(() => {
             const now = new Date().getTime();
@@ -111,7 +123,6 @@
         }, 1000);
 
         const emojis = ['🎈', '🎉', '❤️', '💖', '💘', '💙', '🎁'];
-        let counter = 0;
 
         function createEmoji() {
             const emoji = document.createElement('div');
@@ -131,13 +142,14 @@
                 }, 300);
 
                 counter++;
-                document.getElementById('counter').innerText = `Touched Emojis: ${counter}`;
+                counterElement.innerText = `Touched Emojis: ${counter}`;
 
-                const notification = document.getElementById('notification');
                 if (counter === 1) {
-                    showNotification(notification, "I'm really sorry and I'm working on myself");
+                    showNotification("I'm really sorry and I'm working on myself");
                 } else if (counter === 5) {
-                    showNotification(notification, "There will be hints! 🔍🎁");
+                    showNotification("There will be hints! 🔍🎁");
+                } else if (counter === 8) {
+                    rewardImage.style.display = 'block';
                 }
             });
 
@@ -170,12 +182,13 @@
             updatePosition();
         }
 
-        function showNotification(element, message) {
-            element.innerText = message;
-            element.classList.add('show');
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.innerText = message;
+            notification.classList.add('show');
 
             setTimeout(() => {
-                element.classList.remove('show');
+                notification.classList.remove('show');
             }, 5000);
         }
 
