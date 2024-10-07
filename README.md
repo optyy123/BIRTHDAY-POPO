@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -95,19 +95,15 @@
     <div id="countdown"></div>
     <div id="counter">Touched Emojis: 0</div>
     
-    <!-- Reward images for 8 and 10 and 13 points -->
-    <img id="reward-image-8" src="https://i.imgur.com/2hjw8IS.png" alt="Reward Image 8">
-    <img id="reward-image-10" src="https://i.imgur.com/Dna92xG.png" alt="Reward Image 10">
-    <img id="reward-image-13" src="https://i.imgur.com/2LJDX4X.png" alt="Reward Image 13">
+    <!-- Reward image after 8 points -->
+    <img id="reward-image" src="https://i.imgur.com/Dna92xG.png" alt="Reward Image">
 
     <div id="notification" class="notification"></div>
 
     <script>
         const countDownDate = new Date("Oct 18, 2024 00:00:00").getTime();
         const counterElement = document.getElementById('counter');
-        const rewardImage8 = document.getElementById('reward-image-8');
-        const rewardImage10 = document.getElementById('reward-image-10');
-        const rewardImage13 = document.getElementById('reward-image-13');
+        const rewardImage = document.getElementById('reward-image');
 
         let counter = 0;
 
@@ -117,8 +113,8 @@
 
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / 1000 * 60);
-            const seconds = Math.floor((distance % 1000 * 60) / 1000);
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
@@ -155,15 +151,7 @@
                 } else if (counter === 5) {
                     showNotification("There will be hints! 🔍🎁");
                 } else if (counter === 8) {
-                    showRewardImage8();
-                } else if (counter === 10) {
-                    showRewardImage10();
-                } else if (counter === 13) {
-                    showRewardImage13();
-                    setTimeout(() => {
-                        hideRewardImage13();
-                        showNotification("That was the last image! 😍");
-                    }, 5000);
+                    showRewardImage();
                 }
             });
 
@@ -206,20 +194,8 @@
             }, 5000);
         }
 
-        function showRewardImage8() {
-            rewardImage8.classList.add('show');
-        }
-
-        function showRewardImage10() {
-            rewardImage10.classList.add('show');
-        }
-
-        function showRewardImage13() {
-            rewardImage13.classList.add('show');
-        }
-
-        function hideRewardImage13() {
-            rewardImage13.classList.remove('show');
+        function showRewardImage() {
+            rewardImage.classList.add('show');
         }
 
         setInterval(() => {
