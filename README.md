@@ -1,3 +1,4 @@
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -5,8 +6,8 @@
     <title>Countdown to Your Birthday! 🎉</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #fff0f5;
+            font-family: 'Comic Sans MS', sans-serif;
+            background-color: #ffe4e1;
             margin: 0;
             padding: 0;
             display: flex;
@@ -19,17 +20,19 @@
         }
         h1 {
             color: #ff69b4;
-            font-size: 3em;
+            font-size: 2.8em;
             margin-bottom: 0;
+            text-shadow: 2px 2px #fff;
         }
         p {
             color: #ff1493;
             font-size: 1.5em;
+            margin-bottom: 20px;
         }
         #countdown {
-            font-size: 2.5em;
+            font-size: 2em;
             color: #ff4500;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         #counter {
             font-size: 2.5em;
@@ -41,48 +44,29 @@
             display: inline-block;
             box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
         }
-        .notification {
-            font-size: 1.5em;
-            color: white;
-            background-color: #32a852;
+        .reward-image {
+            max-width: 300px;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            position: absolute;
+            z-index: 1;
+        }
+        .reward-image.show {
+            opacity: 1;
+        }
+        .hide {
+            opacity: 0;
+        }
+        #notification {
+            position: absolute;
+            top: 10px;
+            background-color: #ff1493;
+            color: #fff;
             padding: 15px;
             border-radius: 10px;
-            position: absolute;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 1s ease-in-out, top 1s ease-in-out;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+            animation: bounce 2s infinite;
         }
-        .notification.show {
-            top: 20px;
-            opacity: 1;
-        }
-        /* Styles for all reward images */
-        .reward-image {
-            display: none;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 20px;
-            max-width: 300px;
-            background: transparent;
-        }
-
-        /* Fade-in and show class */
-        .reward-image.show {
-            display: block;
-            opacity: 1;
-        }
-
-        /* Fade-out animation for the last image */
-        .reward-image.hide {
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-
         .emoji {
             position: absolute;
             font-size: 3em;
@@ -91,40 +75,35 @@
             transition: transform 0.5s ease, opacity 0.5s ease;
             padding: 15px;
         }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5em;
-            }
-            p, #countdown {
-                font-size: 1.5em;
-            }
+            h1 { font-size: 2.5em; }
+            p, #countdown { font-size: 1.5em; }
         }
     </style>
 </head>
 <body>
-    <h1>Countdown to Your Birthday! 🎉</h1>
-    <p>I'm so excited for your special day!</p>
+    <h1>BIRTHDAY-POPO</h1>
+    <p>Countdown to Your Birthday! 🎉</p>
 
     <div id="countdown"></div>
     <div id="counter">Touched Emojis: 0</div>
-    
-    <!-- Reward images -->
-    <img id="reward-image-1" class="reward-image" src="https://i.imgur.com/2hjw8IS.png" alt="Reward Image 1">
-    <img id="reward-image-2" class="reward-image" src="https://i.imgur.com/Dna92xG.png" alt="Reward Image 2">
-    <img id="reward-image-3" class="reward-image" src="https://i.imgur.com/2LJDX4X.png" alt="Reward Image 3">
+
+    <img id="image1" class="reward-image" src="https://i.imgur.com/Dna92xG.png" alt="Reward Image 1">
+    <img id="image2" class="reward-image" src="https://i.imgur.com/anotherImage1.png" alt="Reward Image 2">
+    <img id="image3" class="reward-image" src="https://i.imgur.com/anotherImage2.png" alt="Reward Image 3">
 
     <div id="notification" class="notification"></div>
 
     <script>
         const countDownDate = new Date("Oct 18, 2024 00:00:00").getTime();
         const counterElement = document.getElementById('counter');
-        const rewardImage1 = document.getElementById('reward-image-1');
-        const rewardImage2 = document.getElementById('reward-image-2');
-        const rewardImage3 = document.getElementById('reward-image-3');
 
         let counter = 0;
 
-        // Countdown Timer
         const countdownFunction = setInterval(() => {
             const now = new Date().getTime();
             const distance = countDownDate - now;
@@ -142,6 +121,35 @@
             }
         }, 1000);
 
+        function showImage(imgElement) {
+            imgElement.classList.add('show');
+        }
+
+        function hideImage(imgElement) {
+            imgElement.classList.remove('show');
+        }
+
+        function handleCounter() {
+            counter++;
+
+            if (counter === 8) {
+                showImage(document.getElementById('image1'));
+            } else if (counter === 10) {
+                hideImage(document.getElementById('image1'));
+                showImage(document.getElementById('image2'));
+            } else if (counter === 13) {
+                hideImage(document.getElementById('image2'));
+                const image3 = document.getElementById('image3');
+                showImage(image3);
+
+                setTimeout(() => {
+                    hideImage(image3);
+                }, 5000);
+            }
+
+            counterElement.innerText = `Touched Emojis: ${counter}`;
+        }
+
         const emojis = ['🎈', '🎉', '❤️', '💖', '💘', '💙', '🎁'];
 
         function createEmoji() {
@@ -157,27 +165,10 @@
                 emoji.style.opacity = '0';
 
                 setTimeout(() => {
-                    emoji.innerText = '✨'; // Sparkle effect
-                    setTimeout(() => emoji.remove(), 500);
-                }, 300);
+                    emoji.remove();
+                }, 500);
 
-                counter++;
-                counterElement.innerText = `Touched Emojis: ${counter}`;
-
-                if (counter === 1) {
-                    showNotification("I'm really sorry and I'm working on myself");
-                } else if (counter === 5) {
-                    showNotification("There will be hints! 🔍🎁");
-                } else if (counter === 8) {
-                    showRewardImage(rewardImage1);
-                } else if (counter === 10) {
-                    showRewardImage(rewardImage2);
-                } else if (counter === 13) {
-                    showRewardImage(rewardImage3);
-                    setTimeout(() => {
-                        hideRewardImage(rewardImage3);
-                    }, 5000);
-                }
+                handleCounter();
             });
 
             document.body.appendChild(emoji);
@@ -187,12 +178,11 @@
         }
 
         function animateEmoji(emoji) {
-            const gravity = 0.01; 
             let velocityY = Math.random() * -2 - 3; 
             let velocityX = (Math.random() - 0.5) * 2;
 
             function updatePosition() {
-                velocityY += gravity;
+                velocityY += 0.01;
                 const currentTop = parseFloat(emoji.style.top) || 0;
                 const currentLeft = parseFloat(emoji.style.left) || 0;
 
@@ -209,28 +199,6 @@
             updatePosition();
         }
 
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            notification.innerText = message;
-            notification.classList.add('show');
-
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 5000);
-        }
-
-        function showRewardImage(imageElement) {
-            imageElement.classList.add('show');
-        }
-
-        function hideRewardImage(imageElement) {
-            imageElement.classList.add('hide');
-            setTimeout(() => {
-                imageElement.style.display = 'none';
-            }, 1000); // Fade out duration matches CSS transition
-        }
-
-        // Generate random emojis
         setInterval(() => {
             const emojiCount = Math.floor(Math.random() * 2) + 1;
             for (let i = 0; i < emojiCount; i++) {
