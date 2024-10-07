@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -59,14 +59,16 @@
             top: 20px;
             opacity: 1;
         }
-        .notification.hide {
-            top: -50px;
-            opacity: 0;
-        }
         #reward-image {
             display: none;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
             margin-top: 20px;
             max-width: 300px;
+        }
+        #reward-image.show {
+            display: block;
+            opacity: 1;
         }
         .emoji {
             position: absolute;
@@ -74,7 +76,7 @@
             user-select: none;
             cursor: pointer;
             transition: transform 0.5s ease, opacity 0.5s ease;
-            padding: 15px; /* Larger hitbox for easier clicking */
+            padding: 15px;
         }
         @media (max-width: 768px) {
             h1 {
@@ -149,7 +151,7 @@
                 } else if (counter === 5) {
                     showNotification("There will be hints! 🔍🎁");
                 } else if (counter === 8) {
-                    rewardImage.style.display = 'block';
+                    showRewardImage();
                 }
             });
 
@@ -160,8 +162,8 @@
         }
 
         function animateEmoji(emoji) {
-            const gravity = 0.01; // Slower gravity for longer float
-            let velocityY = Math.random() * -2 - 3; // Higher initial upward force
+            const gravity = 0.01; 
+            let velocityY = Math.random() * -2 - 3; 
             let velocityX = (Math.random() - 0.5) * 2;
 
             function updatePosition() {
@@ -190,6 +192,10 @@
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 5000);
+        }
+
+        function showRewardImage() {
+            rewardImage.classList.add('show');
         }
 
         setInterval(() => {
