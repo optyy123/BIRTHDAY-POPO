@@ -11,12 +11,18 @@
             margin: 0;
             padding: 0;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             height: 100vh;
             text-align: center;
             overflow: hidden;
+        }
+        .content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         h1 {
             color: #ff69b4;
@@ -63,7 +69,6 @@
             display: none;
             opacity: 0;
             transition: opacity 1s ease-in-out;
-            margin-top: 20px;
             max-width: 250px;
             height: 250px;
         }
@@ -90,16 +95,18 @@
     </style>
 </head>
 <body>
-    <h1>Countdown to Your Birthday! 🎉</h1>
-    <p>I'm so excited for your special day!</p>
+    <div class="content">
+        <h1>Countdown to Your Birthday! 🎉</h1>
+        <p>I'm so excited for your special day!</p>
 
-    <div id="countdown"></div>
-    <div id="counter">Touched Emojis: 0</div>
-    
-    <!-- Reward images -->
-    <img id="reward-image-8" src="https://i.imgur.com/2hjw8IS.png" alt="Reward Image 1" class="reward-image">
-    <img id="reward-image-10" src="https://i.imgur.com/Dna92xG.png" alt="Reward Image 2" class="reward-image">
-    <img id="reward-image-13" src="https://i.imgur.com/2LJDX4X.png" alt="Reward Image 3" class="reward-image">
+        <div id="countdown"></div>
+        <div id="counter">Touched Emojis: 0</div>
+
+        <!-- Reward images -->
+        <img id="reward-image-8" src="https://i.imgur.com/2hjw8IS.png" alt="Reward Image 1" class="reward-image">
+        <img id="reward-image-10" src="https://i.imgur.com/Dna92xG.png" alt="Reward Image 2" class="reward-image">
+        <img id="reward-image-13" src="https://i.imgur.com/2LJDX4X.png" alt="Reward Image 3" class="reward-image">
+    </div>
 
     <div id="notification" class="notification"></div>
 
