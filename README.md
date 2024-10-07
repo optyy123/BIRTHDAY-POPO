@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -45,7 +45,7 @@
         .notification {
             font-size: 1.5em;
             color: white;
-            background-color: #32a852; /* Changed to a pleasant green */
+            background-color: #32a852;
             padding: 15px;
             border-radius: 10px;
             position: absolute;
@@ -69,6 +69,7 @@
             user-select: none;
             cursor: pointer;
             transition: transform 0.5s ease, opacity 0.5s ease;
+            padding: 15px; /* Larger hitbox for easier clicking */
         }
         @media (max-width: 768px) {
             h1 {
@@ -90,10 +91,8 @@
     <div id="notification" class="notification"></div>
 
     <script>
-        // Countdown timer setup
         const countDownDate = new Date("Oct 18, 2024 00:00:00").getTime();
 
-        // Update the countdown every second
         const countdownFunction = setInterval(() => {
             const now = new Date().getTime();
             const distance = countDownDate - now;
@@ -111,11 +110,9 @@
             }
         }, 1000);
 
-        // Emojis array
         const emojis = ['🎈', '🎉', '❤️', '💖', '💘', '💙', '🎁'];
         let counter = 0;
 
-        // Function to generate and animate emojis
         function createEmoji() {
             const emoji = document.createElement('div');
             emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
@@ -124,20 +121,18 @@
             emoji.style.left = Math.random() * window.innerWidth + 'px';
             emoji.style.top = window.innerHeight - 50 + 'px';
 
-            // Emoji interaction and counter update
             emoji.addEventListener('click', () => {
                 emoji.style.transform = 'scale(1.5) translateY(-150px)';
                 emoji.style.opacity = '0';
 
                 setTimeout(() => {
-                    emoji.innerText = '✨'; // Add sparkle effect
+                    emoji.innerText = '✨'; // Sparkle effect
                     setTimeout(() => emoji.remove(), 500);
                 }, 300);
 
                 counter++;
                 document.getElementById('counter').innerText = `Touched Emojis: ${counter}`;
 
-                // Notifications for 1 and 5 touches
                 const notification = document.getElementById('notification');
                 if (counter === 1) {
                     showNotification(notification, "I'm really sorry and I'm working on myself");
@@ -149,14 +144,12 @@
             document.body.appendChild(emoji);
             animateEmoji(emoji);
 
-            // Remove emoji after a while to avoid clutter
             setTimeout(() => emoji.remove(), 10000);
         }
 
-        // Function to animate emojis with slow float and higher movement
         function animateEmoji(emoji) {
-            const gravity = 0.03;
-            let velocityY = Math.random() * -2 - 2;
+            const gravity = 0.01; // Slower gravity for longer float
+            let velocityY = Math.random() * -2 - 3; // Higher initial upward force
             let velocityX = (Math.random() - 0.5) * 2;
 
             function updatePosition() {
@@ -167,7 +160,7 @@
                 emoji.style.top = (currentTop + velocityY) + 'px';
                 emoji.style.left = (currentLeft + velocityX) + 'px';
 
-                if (parseFloat(emoji.style.top) > window.innerHeight) {
+                if (parseFloat(emoji.style.top) > window.innerHeight || parseFloat(emoji.style.top) < -50) {
                     emoji.remove();
                 } else {
                     requestAnimationFrame(updatePosition);
@@ -177,7 +170,6 @@
             updatePosition();
         }
 
-        // Function to show notifications
         function showNotification(element, message) {
             element.innerText = message;
             element.classList.add('show');
@@ -187,13 +179,12 @@
             }, 5000);
         }
 
-        // Start generating emojis
         setInterval(() => {
             const emojiCount = Math.floor(Math.random() * 2) + 1;
             for (let i = 0; i < emojiCount; i++) {
                 createEmoji();
             }
-        }, Math.random() * 1000 + 1000); // 1 or 2 emojis every 1-2 seconds
+        }, Math.random() * 1000 + 1000);
     </script>
 </body>
 </html>
