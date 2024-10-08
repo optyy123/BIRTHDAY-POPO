@@ -39,6 +39,37 @@
             color: #4682b4;
         }
 
+        /* Puzzle styles */
+        #puzzle-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px;
+        }
+
+        .draggable {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            background-color: #ff69b4;
+            border: 2px solid #000;
+            display: inline-block;
+            cursor: grab;
+            font-size: 24px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+
+        #puzzle-target {
+            width: 350px;
+            height: 100px;
+            background-color: #fff;
+            border: 2px dashed #4682b4;
+            display: inline-block;
+        }
+
         /* Emoji style */
         .emoji {
             font-size: 2.5em;
@@ -89,13 +120,7 @@
             pointer-events: none;
         }
 
-        /* Puzzle game styles */
-        #puzzle-container {
-            display: flex;
-            justify-content: center;
-            margin: 30px;
-        }
-
+        /* Feedback Text */
         #win-message {
             font-size: 2em;
             color: #32cd32;
@@ -112,11 +137,16 @@
 
     <!-- Puzzle Game Section -->
     <div id="puzzle-game">
-        <div id="puzzle-instructions">Complete the puzzle to reveal a surprise!</div>
+        <div id="puzzle-instructions">Drag the blocks to complete the puzzle!</div>
         <div id="puzzle-container">
-            <!-- Puzzle iframe from an external puzzle maker -->
-            <iframe src="https://www.jigsawexplorer.com/online-jigsaw-puzzle-player.html?puzzle-id=c0f8473cd44a" width="600" height="400"></iframe>
+            <!-- Puzzle pieces -->
+            <div class="draggable" draggable="true" id="piece1">A</div>
+            <div class="draggable" draggable="true" id="piece2">B</div>
+            <div class="draggable" draggable="true" id="piece3">C</div>
+            <div class="draggable" draggable="true" id="piece4">D</div>
         </div>
+        <!-- Puzzle Target -->
+        <div id="puzzle-target"></div>
         <div id="win-message">The gift is more than 2 things!</div>
     </div>
 
@@ -177,6 +207,46 @@
         }
 
         setInterval(createPopUpText, 4000);
+
+        /* Puzzle functionality */
+        const pieces = document.querySelectorAll('.draggable');
+        const target = document.getElementById('puzzle-target');
+        let solved = false;
+
+        pieces.forEach(piece => {
+            piece.addEventListener('dragstart', dragStart);
+            piece.addEventListener('dragend', dragEnd);
+        });
+
+        target.addEventListener('dragover', dragOver);
+        target.addEventListener('drop', drop);
+
+        function dragStart(e) {
+            e.dataTransfer.setData('text', e.target.id);
+        }
+
+        function dragEnd() {
+            // You can add visual feedback for dropping
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            const pieceId = e.dataTransfer.getData('text');
+            const piece = document.getElementById(pieceId);
+            target.appendChild(piece);
+            checkPuzzle();
+        }
+
+        function checkPuzzle() {
+            if (target.children.length === 4) {
+                // Puzzle is solved
+                document.getElementById('win-message').style.display = 'block';
+            }
+        }
     </script>
 </body>
 </html>
