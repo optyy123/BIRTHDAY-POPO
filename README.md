@@ -16,7 +16,7 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            position: relative;
+            text-align: center;
             border: 10px solid #ff69b4;
             border-radius: 15px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -36,7 +36,6 @@
             border-radius: 15px;
             box-shadow: 0 0 10px rgba(255, 20, 147, 0.6);
             margin: 10px;
-            text-align: center;
         }
 
         #emoji-container {
@@ -52,11 +51,12 @@
             bottom: -50px;
             animation: float 10s linear infinite;
             pointer-events: all;
-            transition: transform 0.5s ease-in-out;
+            transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
         }
 
         .fly-away {
-            transform: translateY(-150vh) rotate(360deg) scale(0);
+            transform: translateY(-150vh) rotate(720deg) scale(0.5);
+            opacity: 0;
         }
 
         @keyframes float {
@@ -65,7 +65,7 @@
             }
         }
 
-        /* Center countdown and counter */
+        /* Centered countdown and counter */
         #countdown-container {
             display: flex;
             flex-direction: column;
@@ -91,8 +91,8 @@
             100% { opacity: 0; }
         }
 
-        /* Notification */
-        #popup-message {
+        /* Notification that says the gift is more than two */
+        #notification {
             position: absolute;
             top: -100px;
             left: 50%;
@@ -104,16 +104,12 @@
             border-radius: 15px;
             display: none;
             animation: dropDown 1s forwards;
+            text-align: center;
         }
 
         @keyframes dropDown {
             from { top: -100px; }
             to { top: 20px; }
-        }
-
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
         }
 
         #puzzle-game {
@@ -123,7 +119,6 @@
             border: 2px solid #ff69b4;
             border-radius: 10px;
             margin-top: 20px;
-            text-align: center;
         }
 
         /* Puzzle game */
@@ -153,7 +148,7 @@
 
     <div id="emoji-container"></div>
 
-    <div id="popup-message">The gift is more than two 😉</div>
+    <div id="notification">The gift is more than two 😉🎁🎈</div>
 
     <div id="puzzle-game">
         <h2>Solve the Puzzle 💖</h2>
@@ -203,20 +198,17 @@
             emoji.addEventListener("click", () => {
                 emoji.classList.add("fly-away");
 
-                setTimeout(() => emoji.remove(), 500);  // Remove emoji after it flies away
+                setTimeout(() => emoji.remove(), 800);  // Remove emoji after it flies away
 
                 emojiCounter++;
                 document.getElementById("emoji-counter").innerText = `Touched Emojis: ${emojiCounter}`;
 
                 if (emojiCounter === 5) {
                     document.getElementById("puzzle-game").style.display = "block";
-                    const popupMessage = document.getElementById("popup-message");
-                    popupMessage.style.display = "block";
-                    popupMessage.style.animation = "dropDown 1s forwards";
-                    setTimeout(() => {
-                        popupMessage.style.animation = "fadeOut 1s forwards";
-                        popupMessage.style.opacity = 0;
-                    }, 5000);
+                    const notification = document.getElementById("notification");
+                    notification.style.display = "block";
+                    notification.style.animation = "dropDown 1s forwards";
+                    setTimeout(() => notification.style.opacity = 0, 5000);  // Fade out after 5 seconds
                 }
             });
 
@@ -255,7 +247,7 @@
                     } else {
                         alert("Try again!");
                     }
-                    currentOrder = [];  // Reset after checking
+                    currentOrder = [];  // Reset the order after checking
                 }
             });
         });
