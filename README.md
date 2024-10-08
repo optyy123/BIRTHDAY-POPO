@@ -3,295 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cute Birthday Countdown! 🎉</title>
+    <title>Birthday Countdown with Game</title>
     <style>
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background-color: #fff0f5;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
             text-align: center;
-            overflow: hidden;
-            position: relative;
+            margin: 0;
+            padding: 20px;
         }
-        /* Add a cute border around the page */
-        body::before {
+
+        h1 {
+            font-size: 3em;
+            color: #ff69b4;
+        }
+
+        #countdown {
+            font-size: 2.5em;
+            color: #ff6347;
+            margin: 20px;
+        }
+
+        #emoji-counter {
+            font-size: 1.5em;
+            color: #4682b4;
+            margin: 20px;
+        }
+
+        #minigame {
+            margin-top: 30px;
+        }
+
+        #minigame-instructions {
+            font-size: 1.5em;
+            color: #4682b4;
+        }
+
+        #minigame-target {
+            width: 100px;
+            height: 100px;
+            background-color: #ff6347;
+            border-radius: 50%;
+            display: inline-block;
+            margin-top: 20px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .popup-text {
+            position: absolute;
+            background-color: rgba(255, 182, 193, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .popup-text.show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Cute border */
+        body:before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            border: 10px solid #ff69b4;
-            border-radius: 20px;
-            pointer-events: none; /* Ensure border doesn't block interactions */
+            border: 10px solid #ffb6c1;
+            pointer-events: none;
         }
-        h1 {
-            color: #ff69b4;
-            font-size: 3em;
-            margin-bottom: 0;
-        }
-        p {
-            color: #ff1493;
-            font-size: 1.5em;
-        }
-        #countdown {
-            font-size: 2.5em;
-            color: #ff4500;
-            margin-bottom: 20px;
-        }
-        #counter {
-            font-size: 2.5em;
-            color: #ffffff;
-            background-color: #ff69b4;
-            padding: 10px 20px;
-            border-radius: 30px;
-            margin-top: 10px;
-            display: inline-block;
-            box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
-        }
-        .notification {
-            font-size: 1.5em;
-            color: white;
-            background-color: #32a852;
-            padding: 15px;
-            border-radius: 10px;
-            position: absolute;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 1s ease-in-out, top 1s ease-in-out;
-        }
-        .notification.show {
-            top: 20px;
-            opacity: 1;
-        }
-        /* Center the reward images below the counter */
-        .reward-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+
+        #win-message {
+            font-size: 2em;
+            color: #32cd32;
             margin-top: 20px;
-        }
-        .reward-image {
             display: none;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-            max-width: 250px;
-            height: 250px;
-        }
-        .reward-image.show {
-            display: block;
-            opacity: 1;
-        }
-        /* Cute popup text */
-        .popup-text {
-            position: absolute;
-            font-size: 1.8em;
-            color: #ff69b4;
-            background-color: rgba(255, 182, 193, 0.6);
-            padding: 10px 15px;
-            border-radius: 20px;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-            pointer-events: none; /* Ensure text doesn't interfere with clicks */
-        }
-        .popup-text.show {
-            opacity: 1;
-        }
-        .emoji {
-            position: absolute;
-            font-size: 3em;
-            user-select: none;
-            cursor: pointer;
-            transition: transform 0.5s ease, opacity 0.5s ease;
-            padding: 15px;
-        }
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5em;
-            }
-            p, #countdown {
-                font-size: 1.5em;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="content">
-        <h1>Countdown to Your Birthday! 🎉</h1>
-        <p>You are my everything! 💖</p>
 
-        <div id="countdown"></div>
-        <div id="counter">Touched Emojis: 0</div>
+    <h1>Countdown to Your Birthday!</h1>
+    <div id="countdown"></div>
+    <div id="emoji-counter">Emojis Collected: <span id="counter">0</span></div>
 
-        <!-- Centered reward images below the counter -->
-        <div class="reward-container">
-            <img id="reward-image-8" src="https://i.imgur.com/2hjw8IS.png" alt="Reward Image 1" class="reward-image">
-            <img id="reward-image-10" src="https://i.imgur.com/Dna92xG.png" alt="Reward Image 2" class="reward-image">
-            <img id="reward-image-13" src="https://i.imgur.com/2LJDX4X.png" alt="Reward Image 3" class="reward-image">
-        </div>
+    <div id="minigame">
+        <div id="minigame-instructions">Catch the red circle to win the game!</div>
+        <div id="minigame-target"></div>
+        <div id="win-message">The gift is more than 2 things!</div>
     </div>
 
-    <div id="notification" class="notification"></div>
-    <div id="popupText" class="popup-text"></div>
-
     <script>
-        const countDownDate = new Date("Oct 18, 2024 00:00:00").getTime();
-        const counterElement = document.getElementById('counter');
-        const popupTextElement = document.getElementById('popupText');
-        const rewardImage8 = document.getElementById('reward-image-8');
-        const rewardImage10 = document.getElementById('reward-image-10');
-        const rewardImage13 = document.getElementById('reward-image-13');
+        const targetDate = new Date('Oct 18, 2024 00:00:00').getTime();
+        const countdownElement = document.getElementById('countdown');
+        let emojiCounter = 0;
 
-        let counter = 0;
-
-        const countdownFunction = setInterval(() => {
+        function updateCountdown() {
             const now = new Date().getTime();
-            const distance = countDownDate - now;
+            const distance = targetDate - now;
 
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % 1000 * 60) / 1000);
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
 
-            if (distance < 0) {
-                clearInterval(countdownFunction);
-                document.getElementById("countdown").innerHTML = "Happy Birthday!";
+        setInterval(updateCountdown, 1000);
+
+        /* Mini-game */
+        const targetElement = document.getElementById('minigame-target');
+        const winMessage = document.getElementById('win-message');
+        let gameWon = false;
+
+        function moveTarget() {
+            if (!gameWon) {
+                const randomX = Math.random() * (window.innerWidth - 100);
+                const randomY = Math.random() * (window.innerHeight - 200);
+                targetElement.style.left = randomX + 'px';
+                targetElement.style.top = randomY + 'px';
             }
-        }, 1000);
-
-        const emojis = ['🎈', '🎉', '❤️', '💖', '💘', '💙', '🎁'];
-
-        function createEmoji() {
-            const emoji = document.createElement('div');
-            emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-            emoji.classList.add('emoji');
-
-            emoji.style.left = Math.random() * window.innerWidth + 'px';
-            emoji.style.top = window.innerHeight - 50 + 'px';
-
-            emoji.addEventListener('click', () => {
-                emoji.style.transform = 'scale(1.5) translateY(-150px)';
-                emoji.style.opacity = '0';
-
-                setTimeout(() => {
-                    emoji.innerText = '✨'; // Sparkle effect
-                    setTimeout(() => emoji.remove(), 500);
-                }, 300);
-
-                counter++;
-                counterElement.innerText = `Touched Emojis: ${counter}`;
-
-                if (counter === 1) {
-                    showNotification("I'm really sorry and I'm working on myself");
-                } else if (counter === 5) {
-                    showNotification("There will be hints! 🔍🎁");
-                } else if (counter === 8) {
-                    showRewardImage8();
-                } else if (counter === 10) {
-                    hideRewardImage8();
-                    showRewardImage10();
-                } else if (counter === 13) {
-                    hideRewardImage10();
-                    showRewardImage13();
-                    setTimeout(() => {
-                        hideRewardImage13();
-                        showNotification("The end 💕");
-                    }, 5000);
-                }
-            });
-
-            document.body.appendChild(emoji);
-            animateEmoji(emoji);
-
-            setTimeout(() => emoji.remove(), 10000);
         }
 
-        function animateEmoji(emoji) {
-            const gravity = 0.01; 
-            let velocityY = Math.random() * -2 - 3; 
-            let velocityX = (Math.random() - 0.5) * 2;
+        targetElement.addEventListener('click', () => {
+            gameWon = true;
+            targetElement.style.backgroundColor = "#32cd32";
+            winMessage.style.display = 'block';
+        });
 
-            function updatePosition() {
-                velocityY += gravity;
-                const currentTop = parseFloat(emoji.style.top) || 0;
-                const currentLeft = parseFloat(emoji.style.left) || 0;
-
-                emoji.style.top = (currentTop + velocityY) + 'px';
-                emoji.style.left = (currentLeft + velocityX) + 'px';
-
-                if (parseFloat(emoji.style.top) > window.innerHeight || parseFloat(emoji.style.top) < -50) {
-                    emoji.remove();
-                } else {
-                    requestAnimationFrame(updatePosition);
-                }
-            }
-            updatePosition();
-        }
-
-        setInterval(createEmoji, 2000);
-
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            notification.innerText = message;
-            notification.classList.add('show');
-            setTimeout(() => notification.classList.remove('show'), 5000);
-        }
-
-        function showRewardImage8() {
-            rewardImage8.classList.add('show');
-        }
-        function hideRewardImage8() {
-            rewardImage8.classList.remove('show');
-        }
-        function showRewardImage10() {
-            rewardImage10.classList.add('show');
-        }
-        function hideRewardImage10() {
-            rewardImage10.classList.remove('show');
-        }
-        function showRewardImage13() {
-            rewardImage13.classList.add('show');
-        }
-        function hideRewardImage13() {
-            rewardImage13.classList.remove('show');
-        }
-
-        /* Cute popup text */
-        const cutePhrases = [
-            "You are my everything! 💖",
-            "Love you to the moon and back! 🌙",
-            "You're the best! 🌟",
-            "You're my sunshine ☀️"
-        ];
-
-        function showPopupText() {
-            const phrase = cutePhrases[Math.floor(Math.random() * cutePhrases.length)];
-            popupTextElement.innerText = phrase;
-
-            const randomX = Math.random() * (window.innerWidth - 200);
-            const randomY = Math.random() * (window.innerHeight - 100);
-
-            popupTextElement.style.left = randomX + 'px';
-            popupTextElement.style.top = randomY + 'px';
-            popupTextElement.classList.add('show');
-
-            setTimeout(() => {
-                popupTextElement.classList.remove('show');
-            }, 3000);
-        }
-
-        setInterval(showPopupText, 5000);
+        setInterval(moveTarget, 1500); // Moves target every 1.5 seconds
     </script>
 </body>
 </html>
