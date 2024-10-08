@@ -49,7 +49,7 @@
             font-size: 2.5em;
             position: absolute;
             bottom: -50px;
-            animation: float 10s linear infinite;
+            animation: floaty 8s ease-in-out infinite;
             pointer-events: all;
             transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
         }
@@ -59,8 +59,14 @@
             opacity: 0;
         }
 
-        @keyframes float {
-            to {
+        @keyframes floaty {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
                 transform: translateY(-100vh);
             }
         }
@@ -91,10 +97,10 @@
             100% { opacity: 0; }
         }
 
-        /* Notification that says the gift is more than two */
-        #notification {
+        /* Notification for after the puzzle is solved */
+        #gift-message {
             position: absolute;
-            top: -100px;
+            top: 100px;
             left: 50%;
             transform: translateX(-50%);
             background-color: #ff69b4;
@@ -103,13 +109,13 @@
             padding: 15px;
             border-radius: 15px;
             display: none;
-            animation: dropDown 1s forwards;
+            animation: fadeIn 1s forwards;
             text-align: center;
         }
 
-        @keyframes dropDown {
-            from { top: -100px; }
-            to { top: 20px; }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         #puzzle-game {
@@ -148,7 +154,7 @@
 
     <div id="emoji-container"></div>
 
-    <div id="notification">The gift is more than two 😉🎁🎈</div>
+    <div id="gift-message">The gift is more than two 😉🎁🎈</div>
 
     <div id="puzzle-game">
         <h2>Solve the Puzzle 💖</h2>
@@ -205,10 +211,6 @@
 
                 if (emojiCounter === 5) {
                     document.getElementById("puzzle-game").style.display = "block";
-                    const notification = document.getElementById("notification");
-                    notification.style.display = "block";
-                    notification.style.animation = "dropDown 1s forwards";
-                    setTimeout(() => notification.style.opacity = 0, 5000);  // Fade out after 5 seconds
                 }
             });
 
@@ -243,9 +245,7 @@
                 if (currentOrder.length === 4) {
                     const isCorrect = JSON.stringify(currentOrder) === JSON.stringify([1, 2, 3, 4]);
                     if (isCorrect) {
-                        alert("Puzzle Solved! 🎉");
-                    } else {
-                        alert("Try again!");
+                        document.getElementById("gift-message").style.display = "block";
                     }
                     currentOrder = [];  // Reset the order after checking
                 }
