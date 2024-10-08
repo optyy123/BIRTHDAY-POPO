@@ -11,6 +11,7 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -27,14 +28,15 @@
             margin-bottom: 0.5em;
         }
 
-        #countdown {
+        #countdown, #emoji-counter {
             font-size: 2.5em;
             color: #ff1493;
             background-color: white;
             padding: 10px 20px;
             border-radius: 15px;
             box-shadow: 0 0 10px rgba(255, 20, 147, 0.6);
-            margin-bottom: 20px;
+            margin: 10px;
+            text-align: center;
         }
 
         #emoji-container {
@@ -50,6 +52,11 @@
             bottom: -50px;
             animation: float 10s linear infinite;
             pointer-events: all;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .fly-away {
+            transform: translateY(-150vh) rotate(360deg) scale(0);
         }
 
         @keyframes float {
@@ -58,37 +65,36 @@
             }
         }
 
-        .fly-away {
-            animation: flyAway 1s ease-in-out forwards;
+        /* Center countdown and counter */
+        #countdown-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        @keyframes flyAway {
-            to {
-                transform: translate(300px, -200px) scale(0);
-                opacity: 0;
-            }
-        }
-
-        #emoji-counter {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background-color: #ff1493;
-            color: white;
-            font-size: 1.5em;
-            padding: 15px;
+        /* Glass-like popup background */
+        .popup-text {
+            position: absolute;
+            color: #ff69b4;
+            font-size: 1.8em;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(255, 20, 147, 0.5);
-            transition: transform 0.3s ease;
+            padding: 10px 20px;
+            box-shadow: 0 0 10px rgba(255, 182, 193, 0.6);
+            animation: disappear 3s linear forwards;
         }
 
-        #emoji-counter.animated {
-            transform: scale(1.1);
+        @keyframes disappear {
+            0%, 70% { opacity: 1; }
+            100% { opacity: 0; }
         }
 
+        /* Notification */
         #popup-message {
-            position: fixed;
-            top: 50px;
+            position: absolute;
+            top: -100px;
             left: 50%;
             transform: translateX(-50%);
             background-color: #ff69b4;
@@ -97,12 +103,12 @@
             padding: 15px;
             border-radius: 15px;
             display: none;
-            animation: fadeInOut 1s forwards, fadeOut 5s forwards;
+            animation: dropDown 1s forwards;
         }
 
-        @keyframes fadeInOut {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        @keyframes dropDown {
+            from { top: -100px; }
+            to { top: 20px; }
         }
 
         @keyframes fadeOut {
@@ -120,56 +126,43 @@
             text-align: center;
         }
 
+        /* Puzzle game */
         .puzzle-piece {
             display: inline-block;
             background-color: #ff69b4;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             margin: 5px;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
-        .puzzle-piece.solved {
+        .puzzle-piece.correct {
             background-color: #ff1493;
-        }
-
-        .popup-text {
-            position: absolute;
-            color: #ff69b4;
-            font-size: 1.8em;
-            font-weight: bold;
-            animation: disappear 3s linear forwards;
-        }
-
-        @keyframes disappear {
-            0%, 70% { opacity: 1; }
-            100% { opacity: 0; }
         }
     </style>
 </head>
 <body>
     <h1>Countdown to Your Birthday 🎂</h1>
-    <div id="countdown">...</div>
+
+    <div id="countdown-container">
+        <div id="countdown">...</div>
+        <div id="emoji-counter">Touched Emojis: 0</div>
+    </div>
 
     <div id="emoji-container"></div>
-
-    <div id="emoji-counter">Touched Emojis: 0</div>
 
     <div id="popup-message">The gift is more than two 😉</div>
 
     <div id="puzzle-game">
         <h2>Solve the Puzzle 💖</h2>
         <div id="puzzle">
-            <div class="puzzle-piece" data-piece="1"></div>
-            <div class="puzzle-piece" data-piece="2"></div>
-            <div class="puzzle-piece" data-piece="3"></div>
-            <div class="puzzle-piece" data-piece="4"></div>
-            <div class="puzzle-piece" data-piece="5"></div>
-            <div class="puzzle-piece" data-piece="6"></div>
-            <div class="puzzle-piece" data-piece="7"></div>
-            <div class="puzzle-piece" data-piece="8"></div>
+            <!-- Example puzzle: Arrange numbers in ascending order -->
+            <div class="puzzle-piece" data-piece="4">4</div>
+            <div class="puzzle-piece" data-piece="1">1</div>
+            <div class="puzzle-piece" data-piece="3">3</div>
+            <div class="puzzle-piece" data-piece="2">2</div>
         </div>
     </div>
 
@@ -206,33 +199,33 @@
             emoji.innerHTML = emojiList[Math.floor(Math.random() * emojiList.length)];
             emoji.classList.add("emoji");
             emoji.style.left = `${Math.random() * 100}%`;
+
             emoji.addEventListener("click", () => {
                 emoji.classList.add("fly-away");
-                setTimeout(() => emoji.remove(), 1000);
+
+                setTimeout(() => emoji.remove(), 500);  // Remove emoji after it flies away
 
                 emojiCounter++;
-                const emojiCounterElement = document.getElementById("emoji-counter");
-                emojiCounterElement.innerText = `Touched Emojis: ${emojiCounter}`;
-                emojiCounterElement.classList.add("animated");
-
-                setTimeout(() => emojiCounterElement.classList.remove("animated"), 300);
+                document.getElementById("emoji-counter").innerText = `Touched Emojis: ${emojiCounter}`;
 
                 if (emojiCounter === 5) {
                     document.getElementById("puzzle-game").style.display = "block";
                     const popupMessage = document.getElementById("popup-message");
                     popupMessage.style.display = "block";
+                    popupMessage.style.animation = "dropDown 1s forwards";
                     setTimeout(() => {
-                        popupMessage.style.display = "none";
+                        popupMessage.style.animation = "fadeOut 1s forwards";
+                        popupMessage.style.opacity = 0;
                     }, 5000);
                 }
             });
 
             emojiContainer.appendChild(emoji);
 
-            setTimeout(() => emoji.remove(), 10000);
+            setTimeout(() => emoji.remove(), 10000); // Remove emoji after 10 seconds if not clicked
         }, 1500);
 
-        // Random popup text
+        // Random pop-up text with glass effect
         const popUpMessages = ["You are my everything 💖", "I love you 💕", "You make my heart flutter 💘"];
 
         setInterval(() => {
@@ -246,15 +239,23 @@
             setTimeout(() => randomMessage.remove(), 3000);
         }, 3000);
 
-        // Puzzle game interaction
+        // Puzzle game logic (simple reordering puzzle)
         const puzzlePieces = document.querySelectorAll(".puzzle-piece");
-        let solvedPieces = 0;
+        let currentOrder = [];
+
         puzzlePieces.forEach(piece => {
             piece.addEventListener("click", () => {
-                piece.classList.add("solved");
-                solvedPieces++;
-                if (solvedPieces === puzzlePieces.length) {
-                    alert("Puzzle Solved! 🎉");
+                currentOrder.push(parseInt(piece.dataset.piece));
+
+                // Check if the order is correct
+                if (currentOrder.length === 4) {
+                    const isCorrect = JSON.stringify(currentOrder) === JSON.stringify([1, 2, 3, 4]);
+                    if (isCorrect) {
+                        alert("Puzzle Solved! 🎉");
+                    } else {
+                        alert("Try again!");
+                    }
+                    currentOrder = [];  // Reset after checking
                 }
             });
         });
