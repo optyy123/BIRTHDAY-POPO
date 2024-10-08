@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birthday Countdown with Game</title>
+    <title>Birthday Countdown with Puzzle</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -30,41 +30,51 @@
             margin: 20px;
         }
 
-        #minigame {
+        #puzzle-game {
             margin-top: 30px;
         }
 
-        #minigame-instructions {
+        #puzzle-instructions {
             font-size: 1.5em;
             color: #4682b4;
         }
 
-        #minigame-target {
-            width: 100px;
-            height: 100px;
-            background-color: #ff6347;
-            border-radius: 50%;
-            display: inline-block;
-            margin-top: 20px;
+        /* Emoji style */
+        .emoji {
+            font-size: 2.5em;
+            position: fixed;
+            bottom: 0;
+            animation: floatUp 8s ease-in-out;
             cursor: pointer;
-            position: relative;
-            transition: all 0.3s ease;
         }
 
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Pop-up text style */
         .popup-text {
+            font-size: 1.5em;
+            color: #32cd32;
             position: absolute;
-            background-color: rgba(255, 182, 193, 0.8);
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 1.2em;
-            display: none;
             opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            animation: popUpText 3s ease-in-out infinite;
         }
 
-        .popup-text.show {
-            display: block;
-            opacity: 1;
+        @keyframes popUpText {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
         }
 
         /* Cute border */
@@ -77,6 +87,13 @@
             bottom: 0;
             border: 10px solid #ffb6c1;
             pointer-events: none;
+        }
+
+        /* Puzzle game styles */
+        #puzzle-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px;
         }
 
         #win-message {
@@ -93,9 +110,13 @@
     <div id="countdown"></div>
     <div id="emoji-counter">Emojis Collected: <span id="counter">0</span></div>
 
-    <div id="minigame">
-        <div id="minigame-instructions">Catch the red circle to win the game!</div>
-        <div id="minigame-target"></div>
+    <!-- Puzzle Game Section -->
+    <div id="puzzle-game">
+        <div id="puzzle-instructions">Complete the puzzle to reveal a surprise!</div>
+        <div id="puzzle-container">
+            <!-- Puzzle iframe from an external puzzle maker -->
+            <iframe src="https://www.jigsawexplorer.com/online-jigsaw-puzzle-player.html?puzzle-id=c0f8473cd44a" width="600" height="400"></iframe>
+        </div>
         <div id="win-message">The gift is more than 2 things!</div>
     </div>
 
@@ -118,27 +139,44 @@
 
         setInterval(updateCountdown, 1000);
 
-        /* Mini-game */
-        const targetElement = document.getElementById('minigame-target');
-        const winMessage = document.getElementById('win-message');
-        let gameWon = false;
+        /* Emojis floating up */
+        function createEmoji() {
+            const emoji = document.createElement('div');
+            emoji.classList.add('emoji');
+            const emojis = ['🎈', '🎉', '💖', '🎁', '💙', '💗'];
+            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.style.left = Math.random() * window.innerWidth + 'px';
+            document.body.appendChild(emoji);
 
-        function moveTarget() {
-            if (!gameWon) {
-                const randomX = Math.random() * (window.innerWidth - 100);
-                const randomY = Math.random() * (window.innerHeight - 200);
-                targetElement.style.left = randomX + 'px';
-                targetElement.style.top = randomY + 'px';
-            }
+            emoji.addEventListener('click', () => {
+                emojiCounter++;
+                document.getElementById('counter').textContent = emojiCounter;
+                emoji.remove();
+            });
+
+            setTimeout(() => {
+                emoji.remove();
+            }, 8000);
         }
 
-        targetElement.addEventListener('click', () => {
-            gameWon = true;
-            targetElement.style.backgroundColor = "#32cd32";
-            winMessage.style.display = 'block';
-        });
+        setInterval(createEmoji, 2000);
 
-        setInterval(moveTarget, 1500); // Moves target every 1.5 seconds
+        /* Pop-up text */
+        function createPopUpText() {
+            const popUp = document.createElement('div');
+            popUp.classList.add('popup-text');
+            const texts = ['You are my everything', 'I love you', 'So special to me!'];
+            popUp.textContent = texts[Math.floor(Math.random() * texts.length)];
+            popUp.style.left = Math.random() * window.innerWidth + 'px';
+            popUp.style.top = Math.random() * window.innerHeight + 'px';
+            document.body.appendChild(popUp);
+
+            setTimeout(() => {
+                popUp.remove();
+            }, 3000);
+        }
+
+        setInterval(createPopUpText, 4000);
     </script>
 </body>
 </html>
