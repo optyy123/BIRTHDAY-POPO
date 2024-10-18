@@ -69,6 +69,7 @@
         let playerQuestions = [];
         let currentQuestionIndex = 0;
         let questionsSubmitted = false;
+        let allQuestions = []; // Moved here to a higher scope
 
         // Submit Questions
         submitBtn.addEventListener('click', function () {
@@ -110,18 +111,17 @@
         // Start the Game
         function startGame(players) {
             gameScreen.style.display = 'block';
-            let allQuestions = [];
 
             // Combine both players' questions
             for (let player in players) {
                 allQuestions = allQuestions.concat(players[player].questions);
             }
             // Show the first question
-            showQuestion(allQuestions);
+            showQuestion();
         }
 
         // Show current question
-        function showQuestion(allQuestions) {
+        function showQuestion() {
             if (currentQuestionIndex < allQuestions.length) {
                 questionDisplay.textContent = allQuestions[currentQuestionIndex];
             } else {
@@ -133,7 +133,7 @@
         // Next question button
         nextBtn.addEventListener('click', function () {
             currentQuestionIndex++;
-            showQuestion(allQuestions);
+            showQuestion();
         });
 
         // Reset button
