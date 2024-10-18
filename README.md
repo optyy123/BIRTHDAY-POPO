@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -36,23 +36,27 @@
             margin-top: 20px;
         }
     </style>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-    <script>
+    <!-- Include Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
         // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyCqAhFMKIlVqRrEOAyIuQijkEQ7-3y_khw",                      // Replace with your actual API key
-            authDomain: "birthdaypopo-d0d0f.firebaseapp.com",              // Replace with your actual Auth Domain
-            databaseURL: "https://birthdaypopo-d0d0f-default-rtdb.firebaseio.com",  // Your Realtime Database URL
-            projectId: "birthdaypopo-d0d0f",                 // Replace with your actual Project ID
-            storageBucket: "birthdaypopo-d0d0f.appspot.com",         // Replace with your actual Storage Bucket
-            messagingSenderId: "105525599505", // Replace with your actual Messaging Sender ID
-            appId: "1:105525599505:web:cf78dce1f7e474067cc0b0"                          // Replace with your actual App ID
+            apiKey: "AIzaSyCqAhFMKIlVqRrEOAyIuQijkEQ7-3y_khw",
+            authDomain: "birthdaypopo-d0d0f.firebaseapp.com",
+            databaseURL: "https://birthdaypopo-d0d0f-default-rtdb.firebaseio.com",
+            projectId: "birthdaypopo-d0d0f",
+            storageBucket: "birthdaypopo-d0d0f.appspot.com",
+            messagingSenderId: "105525599505",
+            appId: "1:105525599505:web:cf78dce1f7e474067cc0b0",
+            measurementId: "G-BM5B8NFJDN"
         };
 
         // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
         // Variables
         const submitBtn = document.getElementById('submit-btn');
@@ -80,7 +84,7 @@
 
                 // Store questions in Firebase
                 const playerId = Math.random().toString(36).substr(2, 9); // Unique player ID
-                firebase.database().ref('memoryGame/players/' + playerId).set({
+                set(ref(db, 'memoryGame/players/' + playerId), {
                     questions: playerQuestions
                 });
 
@@ -94,7 +98,7 @@
 
         // Check if the other player has submitted
         function checkForOtherPlayer() {
-            firebase.database().ref('memoryGame/players').on('value', (snapshot) => {
+            onValue(ref(db, 'memoryGame/players'), (snapshot) => {
                 const players = snapshot.val();
                 if (players && Object.keys(players).length === 2 && questionsSubmitted) {
                     // Both players have submitted questions
@@ -134,7 +138,7 @@
 
         // Reset button
         resetBtn.addEventListener('click', function () {
-            firebase.database().ref('memoryGame').remove(); // Clear Firebase data
+            remove(ref(db, 'memoryGame')); // Clear Firebase data
             location.reload(); // Reload the page
         });
     </script>
