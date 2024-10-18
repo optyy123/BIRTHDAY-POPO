@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memory Lane Game</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Add your styles if needed -->
+    <link rel="stylesheet" href="styles.css"> <!-- Ensure this file exists or remove this line -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
     <style>
@@ -75,77 +75,77 @@
 </div>
 
 <script>
-// Your web app's Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyCqAhFMKIlVqRrEOAyIuQijkEQ7-3y_khw",
-    authDomain: "birthdaypopo-d0d0f.firebaseapp.com",
-    databaseURL: "https://birthdaypopo-d0d0f-default-rtdb.firebaseio.com",
-    projectId: "birthdaypopo-d0d0f",
-    storageBucket: "birthdaypopo-d0d0f.appspot.com",
-    messagingSenderId: "105525599505",
-    appId: "1:105525599505:web:cf78dce1f7e474067cc0b0",
-    measurementId: "G-BM5B8NFJDN"
-};
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyCqAhFMKIlVqRrEOAyIuQijkEQ7-3y_khw",
+        authDomain: "birthdaypopo-d0d0f.firebaseapp.com",
+        databaseURL: "https://birthdaypopo-d0d0f-default-rtdb.firebaseio.com",
+        projectId: "birthdaypopo-d0d0f",
+        storageBucket: "birthdaypopo-d0d0f.appspot.com",
+        messagingSenderId: "105525599505",
+        appId: "1:105525599505:web:cf78dce1f7e474067cc0b0",
+        measurementId: "G-BM5B8NFJDN"
+    };
 
-// Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-let playerId = "player" + Date.now(); // Unique player ID
-let questionsSubmitted = false;
-let questionsArray = [];
-let currentQuestionIndex = 0;
+    let playerId = "player" + Date.now(); // Unique player ID
+    let questionsSubmitted = false;
+    let questionsArray = [];
+    let currentQuestionIndex = 0;
 
-document.getElementById('submitBtn').addEventListener('click', function () {
-    const q1 = document.getElementById('q1').value.trim();
-    const q2 = document.getElementById('q2').value.trim();
-    const q3 = document.getElementById('q3').value.trim();
-    const q4 = document.getElementById('q4').value.trim();
-    const q5 = document.getElementById('q5').value.trim();
+    document.getElementById('submitBtn').addEventListener('click', function () {
+        const q1 = document.getElementById('q1').value.trim();
+        const q2 = document.getElementById('q2').value.trim();
+        const q3 = document.getElementById('q3').value.trim();
+        const q4 = document.getElementById('q4').value.trim();
+        const q5 = document.getElementById('q5').value.trim();
 
-    if (q1 && q2 && q3 && q4 && q5) {
-        // Store questions in an array
-        questionsArray = [q1, q2, q3, q4, q5];
+        if (q1 && q2 && q3 && q4 && q5) {
+            // Store questions in an array
+            questionsArray = [q1, q2, q3, q4, q5];
 
-        // Write to Firebase under the player's ID
-        db.ref('memoryGame/players/' + playerId).set({
-            questions: questionsArray
-        });
+            // Write to Firebase under the player's ID
+            db.ref('memoryGame/players/' + playerId).set({
+                questions: questionsArray
+            });
 
-        // Hide input screen and show question display
-        document.getElementById('inputScreen').style.display = 'none';
-        document.getElementById('questionDisplay').style.display = 'block';
-        document.getElementById('currentQuestion').innerText = questionsArray[currentQuestionIndex];
-        questionsSubmitted = true;
-    } else {
-        alert("Please enter all 5 questions.");
-    }
-});
+            // Hide input screen and show question display
+            document.getElementById('inputScreen').style.display = 'none';
+            document.getElementById('questionDisplay').style.display = 'block';
+            document.getElementById('currentQuestion').innerText = questionsArray[currentQuestionIndex];
+            questionsSubmitted = true;
+        } else {
+            alert("Please enter all 5 questions.");
+        }
+    });
 
-// Next question button
-document.getElementById('nextQuestion').addEventListener('click', function () {
-    currentQuestionIndex++;
-    if (currentQuestionIndex < questionsArray.length) {
-        document.getElementById('currentQuestion').innerText = questionsArray[currentQuestionIndex];
-    } else {
-        document.getElementById('currentQuestion').innerText = "No more questions.";
-        document.getElementById('nextQuestion').style.display = 'none';
-        document.getElementById('resetGame').style.display = 'block';
-    }
-});
+    // Next question button
+    document.getElementById('nextQuestion').addEventListener('click', function () {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questionsArray.length) {
+            document.getElementById('currentQuestion').innerText = questionsArray[currentQuestionIndex];
+        } else {
+            document.getElementById('currentQuestion').innerText = "No more questions.";
+            document.getElementById('nextQuestion').style.display = 'none';
+            document.getElementById('resetGame').style.display = 'block';
+        }
+    });
 
-// Reset game button
-document.getElementById('resetGame').addEventListener('click', function () {
-    // Reset the game state
-    currentQuestionIndex = 0;
-    questionsSubmitted = false;
-    questionsArray = [];
-    document.getElementById('inputScreen').style.display = 'block';
-    document.getElementById('questionDisplay').style.display = 'none';
-    document.getElementById('resetGame').style.display = 'none';
-    document.getElementById('currentQuestion').innerText = "";
-    document.querySelectorAll('input').forEach(input => input.value = '');
-});
+    // Reset game button
+    document.getElementById('resetGame').addEventListener('click', function () {
+        // Reset the game state
+        currentQuestionIndex = 0;
+        questionsSubmitted = false;
+        questionsArray = [];
+        document.getElementById('inputScreen').style.display = 'block';
+        document.getElementById('questionDisplay').style.display = 'none';
+        document.getElementById('resetGame').style.display = 'none';
+        document.getElementById('currentQuestion').innerText = "";
+        document.querySelectorAll('input').forEach(input => input.value = '');
+    });
 </script>
 </body>
 </html>
