@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,7 +16,6 @@
             overflow: hidden;
             position: relative;
         }
-
         .container {
             background-color: #fff;
             border-radius: 15px;
@@ -26,57 +25,119 @@
             width: 90%;
             max-width: 500px;
         }
-
-        .container h1 {
-            font-size: 24px;
-            color: #ff69b4;
-            margin-bottom: 20px;
-        }
-
         .question-input {
             margin: 10px 0;
-            width: 100%;
             padding: 10px;
-            border: 2px solid #ff69b4;
-            border-radius: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
-
-        button {
-            background-color: #ff69b4;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #ff4786;
-        }
-
-        .game-screen {
-            display: none;
-        }
-
-        .question-display {
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
-
-        #reset-btn {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            color: #ff69b4;
-            padding: 5px;
+        #next-btn {
+            margin-top: 20px;
         }
     </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCqAhFMKIlVqRrEOAyIuQijkEQ7-3y_khw",                      // Replace with your actual API key
+            authDomain: "birthdaypopo-d0d0f.firebaseapp.com",              // Replace with your actual Auth Domain
+            databaseURL: "https://birthdaypopo-d0d0f-default-rtdb.firebaseio.com",  // Your Realtime Database URL
+            projectId: "birthdaypopo-d0d0f",                 // Replace with your actual Project ID
+            storageBucket: "birthdaypopo-d0d0f.appspot.com",         // Replace with your actual Storage Bucket
+            messagingSenderId: "105525599505", // Replace with your actual Messaging Sender ID
+            appId: "1:105525599505:web:cf78dce1f7e474067cc0b0"                          // Replace with your actual App ID
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Variables
+        const submitBtn = document.getElementById('submit-btn');
+        const inputScreen = document.getElementById('input-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const questionDisplay = document.getElementById('question-display');
+        const nextBtn = document.getElementById('next-btn');
+        const resetBtn = document.getElementById('reset-btn');
+
+        let playerQuestions = [];
+        let currentQuestionIndex = 0;
+        let questionsSubmitted = false;
+
+        // Submit Questions
+        submitBtn.addEventListener('click', function () {
+            const q1 = document.getElementById('q1').value.trim();
+            const q2 = document.getElementById('q2').value.trim();
+            const q3 = document.getElementById('q3').value.trim();
+            const q4 = document.getElementById('q4').value.trim();
+            const q5 = document.getElementById('q5').value.trim();
+
+            if (q1 && q2 && q3 && q4 && q5) {
+                playerQuestions = [q1, q2, q3, q4, q5];
+                inputScreen.style.display = 'none';
+
+                // Store questions in Firebase
+                const playerId = Math.random().toString(36).substr(2, 9); // Unique player ID
+                firebase.database().ref('memoryGame/players/' + playerId).set({
+                    questions: playerQuestions
+                });
+
+                // Wait for the other player
+                questionsSubmitted = true;
+                checkForOtherPlayer();
+            } else {
+                alert("Please enter all 5 questions.");
+            }
+        });
+
+        // Check if the other player has submitted
+        function checkForOtherPlayer() {
+            firebase.database().ref('memoryGame/players').on('value', (snapshot) => {
+                const players = snapshot.val();
+                if (players && Object.keys(players).length === 2 && questionsSubmitted) {
+                    // Both players have submitted questions
+                    startGame(players);
+                }
+            });
+        }
+
+        // Start the Game
+        function startGame(players) {
+            gameScreen.style.display = 'block';
+            let allQuestions = [];
+
+            // Combine both players' questions
+            for (let player in players) {
+                allQuestions = allQuestions.concat(players[player].questions);
+            }
+            // Show the first question
+            showQuestion(allQuestions);
+        }
+
+        // Show current question
+        function showQuestion(allQuestions) {
+            if (currentQuestionIndex < allQuestions.length) {
+                questionDisplay.textContent = allQuestions[currentQuestionIndex];
+            } else {
+                questionDisplay.textContent = "Game over! You've answered all the questions!";
+                nextBtn.style.display = 'none';
+            }
+        }
+
+        // Next question button
+        nextBtn.addEventListener('click', function () {
+            currentQuestionIndex++;
+            showQuestion(allQuestions);
+        });
+
+        // Reset button
+        resetBtn.addEventListener('click', function () {
+            firebase.database().ref('memoryGame').remove(); // Clear Firebase data
+            location.reload(); // Reload the page
+        });
+    </script>
 </head>
 <body>
 
@@ -95,79 +156,14 @@
         <button id="submit-btn">Submit Questions</button>
     </div>
 
-    <div class="container game-screen" id="game-screen">
+    <div class="container game-screen" id="game-screen" style="display: none;">
         <h1>Memory Lane Game</h1>
         <div class="question-display" id="question-display"></div>
         <button id="next-btn">Next Question</button>
     </div>
 
     <!-- Reset button -->
-    <button id="reset-btn">Reset</button>
-
-    <script>
-        // Variables to store questions
-        let playerQuestions = [];
-        let currentQuestionIndex = 0;
-        let otherPlayerSubmitted = false;
-
-        const inputScreen = document.getElementById('input-screen');
-        const gameScreen = document.getElementById('game-screen');
-        const questionDisplay = document.getElementById('question-display');
-        const submitBtn = document.getElementById('submit-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const resetBtn = document.getElementById('reset-btn');
-
-        // Submit Questions
-        submitBtn.addEventListener('click', function () {
-            const q1 = document.getElementById('q1').value.trim();
-            const q2 = document.getElementById('q2').value.trim();
-            const q3 = document.getElementById('q3').value.trim();
-            const q4 = document.getElementById('q4').value.trim();
-            const q5 = document.getElementById('q5').value.trim();
-
-            if (q1 && q2 && q3 && q4 && q5) {
-                playerQuestions = [q1, q2, q3, q4, q5];
-                inputScreen.style.display = 'none';
-                
-                // Wait for the other player (simulate with a flag here)
-                if (otherPlayerSubmitted) {
-                    startGame();
-                } else {
-                    alert("Waiting for the other player to submit questions...");
-                    otherPlayerSubmitted = true;
-                }
-            } else {
-                alert("Please enter all 5 questions.");
-            }
-        });
-
-        // Start the Game
-        function startGame() {
-            gameScreen.style.display = 'block';
-            showQuestion();
-        }
-
-        // Show current question
-        function showQuestion() {
-            if (currentQuestionIndex < playerQuestions.length) {
-                questionDisplay.textContent = playerQuestions[currentQuestionIndex];
-            } else {
-                questionDisplay.textContent = "Game over! You've answered all the questions!";
-                nextBtn.style.display = 'none';
-            }
-        }
-
-        // Next question button
-        nextBtn.addEventListener('click', function () {
-            currentQuestionIndex++;
-            showQuestion();
-        });
-
-        // Reset button
-        resetBtn.addEventListener('click', function () {
-            location.reload();
-        });
-    </script>
+    <button id="reset-btn" style="display: none;">Reset</button>
 
 </body>
 </html>
