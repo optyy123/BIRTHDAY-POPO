@@ -1,151 +1,102 @@
-
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Lane Game</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Ensure this file exists or remove this line -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+    <title>Memory Exploration Game</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.60.0/phaser.min.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
-            text-align: center;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
         }
-
-        #inputScreen {
+        canvas {
             display: block;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-        }
-
-        input {
-            width: 90%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        #questionDisplay {
-            display: none;
-            margin-top: 20px;
+            margin: 0 auto;
         }
     </style>
 </head>
 <body>
-
-<h1>Memory Lane Game</h1>
-
-<div id="inputScreen">
-    <h2>Enter Your Questions</h2>
-    <input type="text" id="q1" placeholder="Question 1" required>
-    <input type="text" id="q2" placeholder="Question 2" required>
-    <input type="text" id="q3" placeholder="Question 3" required>
-    <input type="text" id="q4" placeholder="Question 4" required>
-    <input type="text" id="q5" placeholder="Question 5" required>
-    <button id="submitBtn">Submit Questions</button>
-</div>
-
-<div id="questionDisplay">
-    <h2>Your Questions</h2>
-    <p id="currentQuestion"></p>
-    <button id="nextQuestion">Next Question</button>
-    <button id="resetGame" style="display:none;">Reset Game</button>
-</div>
-
 <script>
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyCqAhFMKIlVqRrEOAyIuQijkEQ7-3y_khw",
-        authDomain: "birthdaypopo-d0d0f.firebaseapp.com",
-        databaseURL: "https://birthdaypopo-d0d0f-default-rtdb.firebaseio.com",
-        projectId: "birthdaypopo-d0d0f",
-        storageBucket: "birthdaypopo-d0d0f.appspot.com",
-        messagingSenderId: "105525599505",
-        appId: "1:105525599505:web:cf78dce1f7e474067cc0b0",
-        measurementId: "G-BM5B8NFJDN"
-    };
+// Game configuration
+const config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    backgroundColor: '#add8e6',
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    }
+};
 
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+const game = new Phaser.Game(config);
 
-    let playerId = "player" + Date.now(); // Unique player ID
-    let questionsSubmitted = false;
-    let questionsArray = [];
-    let currentQuestionIndex = 0;
+let player;
+let cursors;
+let memoryItems;
+let messageBox;
 
-    document.getElementById('submitBtn').addEventListener('click', function () {
-        const q1 = document.getElementById('q1').value.trim();
-        const q2 = document.getElementById('q2').value.trim();
-        const q3 = document.getElementById('q3').value.trim();
-        const q4 = document.getElementById('q4').value.trim();
-        const q5 = document.getElementById('q5').value.trim();
+function preload() {
+    // Load assets
+    this.load.image('background', 'https://via.placeholder.com/800x600.png');
+    this.load.image('player', 'https://via.placeholder.com/40.png?text=P');
+    this.load.image('memory', 'https://via.placeholder.com/50.png?text=M');
+}
 
-        if (q1 && q2 && q3 && q4 && q5) {
-            // Store questions in an array
-            questionsArray = [q1, q2, q3, q4, q5];
+function create() {
+    // Add background
+    this.add.image(400, 300, 'background');
 
-            // Write to Firebase under the player's ID
-            db.ref('memoryGame/players/' + playerId).set({
-                questions: questionsArray
-            });
+    // Add player
+    player = this.physics.add.sprite(100, 300, 'player');
+    player.setCollideWorldBounds(true);
 
-            // Hide input screen and show question display
-            document.getElementById('inputScreen').style.display = 'none';
-            document.getElementById('questionDisplay').style.display = 'block';
-            document.getElementById('currentQuestion').innerText = questionsArray[currentQuestionIndex];
-            questionsSubmitted = true;
-        } else {
-            alert("Please enter all 5 questions.");
-        }
+    // Add memories
+    memoryItems = this.physics.add.staticGroup();
+    memoryItems.create(400, 300, 'memory');
+
+    // Add interaction
+    this.physics.add.overlap(player, memoryItems, collectMemory, null, this);
+
+    // Input controls
+    cursors = this.input.keyboard.createCursorKeys();
+
+    // Message box
+    messageBox = this.add.text(10, 550, '', {
+        fontSize: '16px',
+        fill: '#000',
+        backgroundColor: '#fff',
+        padding: { x: 10, y: 5 }
+    }).setScrollFactor(0).setVisible(false);
+}
+
+function update() {
+    player.setVelocity(0);
+
+    if (cursors.left.isDown) {
+        player.setVelocityX(-160);
+    } else if (cursors.right.isDown) {
+        player.setVelocityX(160);
+    }
+
+    if (cursors.up.isDown) {
+        player.setVelocityY(-160);
+    } else if (cursors.down.isDown) {
+        player.setVelocityY(160);
+    }
+}
+
+function collectMemory(player, memory) {
+    memory.disableBody(true, true);
+    messageBox.setText('You found a memory: Our first photo together!').setVisible(true);
+
+    // Hide the message box after a delay
+    this.time.delayedCall(3000, () => {
+        messageBox.setVisible(false);
     });
-
-    // Next question button
-    document.getElementById('nextQuestion').addEventListener('click', function () {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < questionsArray.length) {
-            document.getElementById('currentQuestion').innerText = questionsArray[currentQuestionIndex];
-        } else {
-            document.getElementById('currentQuestion').innerText = "No more questions.";
-            document.getElementById('nextQuestion').style.display = 'none';
-            document.getElementById('resetGame').style.display = 'block';
-        }
-    });
-
-    // Reset game button
-    document.getElementById('resetGame').addEventListener('click', function () {
-        // Reset the game state
-        currentQuestionIndex = 0;
-        questionsSubmitted = false;
-        questionsArray = [];
-        document.getElementById('inputScreen').style.display = 'block';
-        document.getElementById('questionDisplay').style.display = 'none';
-        document.getElementById('resetGame').style.display = 'none';
-        document.getElementById('currentQuestion').innerText = "";
-        document.querySelectorAll('input').forEach(input => input.value = '');
-    });
+}
 </script>
 </body>
 </html>
